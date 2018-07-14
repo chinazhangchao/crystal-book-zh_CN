@@ -1,6 +1,6 @@
 # Summary
 
-* [Introduction](README.md)
+* [介绍](README.md)
 * [Installation](installation/README.md)
    * [On Debian and Ubuntu](installation/on_debian_and_ubuntu.md)
    * [On RedHat and CentOS](installation/on_redhat_and_centos.md)

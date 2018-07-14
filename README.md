@@ -36,7 +36,7 @@ Starting server ...
 Serving book on http://localhost:4000
 
 ```
-
+或者通过docker方式：
 ```
 $ docker-compose up
 ...
