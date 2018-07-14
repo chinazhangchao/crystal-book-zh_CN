@@ -1,10 +1,10 @@
-# Everything is an object
+# 一切都是对象
 
-In Crystal everything is an object. The definition of an object boils down to these points:
+在 Crystal 中一切都是对象。对象的定义归结为两点：
 
-* It has a type
-* It can respond to some methods
+* 它属于一个类型
+* 它能响应一组方法
 
-This is everything you can know about an object: its type and whether it responds to some method.
+这就是你需要知道的关于对象的全部内容：它的类型、它是否响应某些方法。
 
-An object's internal state, if any, can only be queried by invoking methods.
+只能通过调用方法来访问对象的内部状态。

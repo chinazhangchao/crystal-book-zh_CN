@@ -1,4 +1,4 @@
-# Classes and methods
+# 类和方法
 
 A class is a blueprint from which individual objects are created. As an example, consider a `Person` class. You declare a class like this:
 

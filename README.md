@@ -1,31 +1,30 @@
-# Crystal Programming Language
+# Crystal 编程语言
 
-This is the language reference for the Crystal programming language.
+这是 Crystal 语言的参考文档。
 
-Crystal is a programming language with the following goals:
+Crystal 语言的设计目标如下：
 
-* Have a syntax similar to Ruby (but compatibility with it is not a goal).
-* Be statically type-checked, but without having to specify the type of variables or method arguments.
-* Be able to call C code by writing bindings to it in Crystal.
-* Have compile-time evaluation and generation of code, to avoid boilerplate code.
-* Compile to efficient native code.
+* 语法与Ruby类似（但兼容性不是目标）。
+* 静态类型检查，但不需要显式指定变量或参数类型。
+* 可在Crystal内通过代码绑定调用C代码。
+* 编译期进行代码评估和生成，避免了样板式的代码。
+* 可编译为高效的本地机器码。
 
-## Contributing to the Language Reference
+## 伟大的开源力量
 
-Do you consider yourself a helpful person? If you find bugs or sections
-which need more clarification you're welcome to contribute to this
-language reference. You can submit a pull request to this repository:
-https://github.com/crystal-lang/crystal-book
+欢迎提交 pull request ：
 
-Thank you very much!
+https://github.com/chinazhangchao/crystal-book-zh_CN
 
-### Building and Serving Locally
+一起来翻译吧^_^！QQ交流群号：823109001。
+
+### 本地编译预览
 
 ```
-$ git clone https://github.com/crystal-lang/crystal-book.git
+$ git clone https://github.com/chinazhangchao/crystal-book-zh_CN.git
 $ cd crystal-book
 $ npm install -g gitbook-cli@2.3.0
-$ npm install
+$ gitbook install
 $ gitbook serve
 Live reload server started on port: 35729
 Press CTRL+C to quit ...
@@ -38,9 +37,6 @@ Serving book on http://localhost:4000
 
 ```
 
-Html output will be in `_book` folder (some links won't work if opening the files locally).
-There is also a docker environment to avoid installing dependencies globally:
-
 ```
 $ docker-compose up
 ...
@@ -49,7 +45,3 @@ gitbook_1  | Serving book on http://localhost:4000
 gitbook_1  | Restart after change in file node_modules/.bin
 ...
 ```
-
-### Adding a page
-
-To add a page, create a markdown file in the desired location. Example: `overview/hello_world.md`. Then, add a link in the `SUMMARY.md` file which acts as the navigation for the language reference.

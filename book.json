@@ -1,7 +1,7 @@
 {
     "gitbook": "3.x.x",
     "links": {
-        "contributePrefix": "https://github.com/crystal-lang/crystal-book/"
+        "contributePrefix": "https://github.com/chinazhangchao/crystal-book-zh_CN/"
     },
     "plugins": ["ga", "edit-link", "offline"],
     "pluginsConfig": {
@@ -9,8 +9,8 @@
             "token": "UA-42353458-1"
         },
         "edit-link": {
-            "base": "https://github.com/crystal-lang/crystal-book/edit/master",
-            "label": "Edit This Page"
+            "base": "https://github.com/chinazhangchao/crystal-book-zh_CN/edit/master",
+            "label": "编辑此页"
         }
     }
 }

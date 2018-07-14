@@ -1,18 +1,18 @@
-# The Program
+# Crytstal 程序
 
-The program is a global object in which you can define types, methods and file-local variables.
+Crytstal 程序是一个全局对象，在里面可以定义类型、方法和文件局部变量。
 
 ```crystal
-# Defines a method in the program
+# 在程序定义方法
 def add(x, y)
   x + y
 end
 
-# Invokes the add method in the program
+# 在程序调用add方法
 add(1, 2) #=> 3
 ```
 
-A method's value is the value of its last expression; there's no need for explicit `return` expressions. However, explicit `return` expressions are possible:
+方法的返回值是最后一条表达式的值；无需显式使用 `return` 表达式。当然也可以使用 `return` ：
 
 ```crystal
 def even?(num)
@@ -24,7 +24,7 @@ def even?(num)
 end
 ```
 
-When invoking a method without a receiver, like `add(1, 2)`, it will be searched for in the program if not found in the current type or any of its ancestors.
+当调用一个方法时，假如没有指定接收者，例如 `add(1, 2)`，如果在当前类型或祖先链中没有找该方法，就会在全局程序中继续查找。
 
 ```crystal
 def add(x, y)
@@ -33,10 +33,10 @@ end
 
 class Foo
   def bar
-    # invokes the program's add method
+    # 调用全局程序的 add 方法
     add(1, 2)
 
-    # invokes Foo's baz method
+    # 调用 Foo 的 baz 方法
     baz(1, 2)
   end
 
@@ -46,7 +46,7 @@ class Foo
 end
 ```
 
-If you want to invoke the program's method, even though the current type defines a method with the same name, prefix the call with `::`:
+如果要调用全局程序的方法，不管当前类型是否定义了一个同名方法，都可以使用前缀 `::`：
 
 ```crystal
 def baz(x, y)
@@ -65,7 +65,7 @@ class Foo
 end
 ```
 
-Variables declared in a program are not visible inside methods:
+全局声明的变量在方法内不可见：
 
 ```crystal
 x = 1
@@ -77,27 +77,27 @@ end
 add(2)
 ```
 
-Parentheses in method invocations are optional:
+方法调用时圆括号可以省略：
 
 ```crystal
-add 1, 2 # same as add(1, 2)
+add 1, 2 # 等价于 add(1, 2)
 ```
 
-## Main code
+## 主代码
 
-Main code, the code that is run when you compile and run a program, can be written directly in a source file without the need to put it in a special "main" method:
+主代码是编译运行程序时运行的代码，可以直接在源文件里写，无需放入 "main" 函数：
 
 ```crystal
-# This is a program that prints "Hello Crystal!"
+# 这是一个输出 "Hello Crystal!" 的程序
 puts "Hello Crystal!"
 ```
 
-Main code can also be inside type declarations:
+主代码也可以在类型声明里：
 
 ```crystal
-# This is a program that prints "Hello"
+# 这是一个输出 "Hello" 的程序
 class Hello
-  # 'self' here is the Hello class
+  # 这里的 'self' 是 Hello 类
   puts self
 end
 ```

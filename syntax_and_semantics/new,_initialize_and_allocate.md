@@ -1,4 +1,4 @@
-# new, initialize and allocate
+# 实例化，初始化和内存分配
 
 You create an instance of a class by invoking `new` on that class:
 
