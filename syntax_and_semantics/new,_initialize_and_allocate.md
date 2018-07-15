@@ -1,14 +1,14 @@
 # 实例化，初始化和内存分配
 
-You create an instance of a class by invoking `new` on that class:
+通过调用类的 `new` 方法创建实例：
 
 ```
 person = Person.new
 ```
 
-Here, `person` is an instance of `Person`.
+`person` 是 `Person` 的一个实例。
 
-We can't do much with `person`, so let's add some concepts to it. A `Person` has a name and an age. In the "Everything is an object" section we said that an object has a type and responds to some methods, which is the only way to interact with objects, so we'll need both `name` and `age` methods. We will store this information in instance variables, which are always prefixed with an *at* (`@`) character. We also want a Person to come into existence with a name of our choice and an age of zero. We code the "come into existence" part with a special `initialize` method, which is normally called a *constructor*:
+目前 `person` 没啥大用，我们给它加一些概念。一个 `Person` 有名字和年龄。在“一切都是对象”那一节我们说过一个对象属于一个类型、响应一组方法，只能通过调用方法来访问对象的内部状态，因此我们需要 `name` 和 `age` 方法。我们把这些信息存储在实例变量里面，实例变量名以 `@` 开头。我们想让 `Person` 初始化的时候带一个自定义的名字和值为0的年龄。初始化使用一个特殊的方法 `initialize`，这个方法经常被称为“构造函数”：
 
 ```crystal
 class Person
@@ -27,7 +27,7 @@ class Person
 end
 ```
 
-Now we can create people like this:
+现在可以这样创建 `Person` 对象：
 
 ```crystal
 john = Person.new "John"
@@ -39,11 +39,11 @@ john.age #=> 0
 peter.name #=> "Peter"
 ```
 
-(If you wonder why we needed to specify that `name` is a `String` but we didn't need to do it for `age`, check the [global type inference algorithm](type_inference.html))
+（如果你疑惑为啥 `name` 字段指定 `String` 类型，而 `age` 字段没有指定类型，参考[全局类型接口算法](type_inference.html)）
 
-Note that we create a `Person` with `new` but we defined the initialization in an `initialize` method, not in a `new` method. Why is this so?
+注意，我们使用 `new` 方法创建 `Person` 实例，但是初始化代码是在 `initialize` 方法定义的，不是在 `new` 方法。这是为什么？
 
-The answer is that when we defined an `initialize` method Crystal defined a `new` method for us, like this:
+原因是当我们定义 `initialize` 方法时，Crystal 为我们定义了一个 `new` 方法，类似这样：
 
 ```crystal
 class Person
@@ -55,7 +55,6 @@ class Person
 end
 ```
 
-First, note the `self.new` notation. This is a [class method](class_methods.md) that belongs to the **class** `Person`, not to particular instances of that class. This is why we can do `Person.new`.
+首先，注意 `self.new` 这种写法。这是一个[类方法](class_methods.md)，类方法属于 **类** `Person`，不属于类的实例。这就是我们能够使用 `Person.new` 的原因。
 
-Second, `allocate` is a low-level class method that creates an uninitialized object of the given type. It basically allocates the necessary memory for the object, then `initialize` is invoked on it and finally the instance is returned. You generally never invoke `allocate`, as it is [unsafe](unsafe.html), but that's the reason why `new` and `initialize` are related.
-
+其次，`allocate` 是一个底层的类方法，用来创建未初始化的该类对象。本质上它为对象分配所需的内存，然后在该内存上调用 `initialize` 方法，最后返回这个实例。通常你永远不需要调用 `allocate`，因为它是[不安全的](unsafe.html)。这就是 `new` 和 `initialize` 如何关联的。

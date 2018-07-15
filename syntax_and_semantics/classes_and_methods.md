@@ -1,10 +1,10 @@
 # 类和方法
 
-A class is a blueprint from which individual objects are created. As an example, consider a `Person` class. You declare a class like this:
+类是对象创建的模板。举个例子，要定义一个 `Person` 类。写法如下：
 
 ```crystal
 class Person
 end
 ```
 
-Class names, and indeed all type names, begin with a capital letter in Crystal.
+在 Crystal 里类名（事实上所有类型名）都以大写字母开头。

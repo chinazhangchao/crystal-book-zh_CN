@@ -1,4 +1,4 @@
-# Summary
+# 目录
 
 * [介绍](README.md)
 * [Installation](installation/README.md)
@@ -60,7 +60,7 @@
        * [Crystal 程序](syntax_and_semantics/the_program.md)
        * [类和方法](syntax_and_semantics/classes_and_methods.md)
            * [实例化，初始化和内存分配](syntax_and_semantics/new,_initialize_and_allocate.md)
-           * [Methods and instance variables](syntax_and_semantics/methods_and_instance_variables.md)
+           * [方法和实例变量](syntax_and_semantics/methods_and_instance_variables.md)
            * [Type inference](syntax_and_semantics/type_inference.md)
            * [Union types](syntax_and_semantics/union_types.md)
            * [Overloading](syntax_and_semantics/overloading.md)
