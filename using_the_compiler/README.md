@@ -1,64 +1,64 @@
-# Using the compiler
+# 使用编译器
 
-Once you [install](../installation/README.md) the compiler you will have a `crystal` binary at your disposal.
+[安装](../installation/README.md)完编译器后就可以使用 `crystal` 命令。
 
-In the next sections a dollar sign (`$`) denotes the command line.
+在下面的章节中美元符号(`$`)表示命令行。
 
-## Compiling and running at once
+## 一次编译运行
 
-To compile and run a program in a single shot you can invoke `crystal` with a single filename:
+通过`crystal`命令后面加文件名就可以编译运行程序。
 
 ```
 $ crystal some_program.cr
 ```
 
-Crystal files end with the `.cr` extension.
+Crystal程序文件以`.cr`扩展名结尾。
 
-Alternatively you can use the `run` command:
+也可以使用`run`命令：
 
 ```
 $ crystal run some_program.cr
 ```
 
-## Creating a dynamically-linked executable
+## 生成动态链接的可执行文件
 
-To create an executable use the `build` command:
+可以使用`build`命令生成可执行文件：
 
 ```
 $ crystal build some_program.cr
 ```
 
-This will create a `some_program` file that you can execute:
+上面的命令会生成名为`some_program`的可执行文件：
 
 ```
 $ ./some_program
 ```
 
-**Note:** By default the generated executables **are not fully optimized**. To turn optimizations on, use the `--release` flag:
+**注意：** 默认生成的可执行文件**没有完全优化**。 打开优化开关，使用`--release`选项：
 
 ```
 $ crystal build some_program.cr --release
 ```
 
-Make sure to always use `--release` for production-ready executables and when performing benchmarks.
+一定要确保在生产环境和性能测试时总是使用`--release`。
 
-The reason for this is that performance without full optimizations is still pretty good and provides fast compile times, so you can use the `crystal` command almost as if it were an interpreter.
+没有完全优化时的性能也不错，编译时间也很短，因此你可以总是使用`crystal`命令，就好像在运行解释器一样。
 
-To reduce the binary size, you can add the `--no-debug` flag and use the `strip` command. Debug symbols will be removed, use this option if only size is an issue and you won't need to debug the program.
+可以通过`--no-debug`选项和`strip`命令减少二进制文件的大小。调试符号会被移除，只有当大小是主要问题并且不需要调试时才使用这个选项。
 
-## Creating a standalone executable
+## 生成单独的可执行文件
 
-To build a standalone executable of your program:
+生成单独的可执行文件，使用如下命令：
 
 ```
 $ crystal build some_program.cr --release --static
 ```
 
-More informations about statically linking [can be found on the wiki](https://github.com/crystal-lang/crystal/wiki/Static-Linking)
+更多有关静态链接的信息[查看这里](https://github.com/crystal-lang/crystal/wiki/Static-Linking)
 
-## Creating a project or library
+## 创建项目或库
 
-Use the `init` command to create a Crystal project with the standard directory structure.
+使用`init`命令创建带有标准目录结构的Crystal项目。
 
 ```
 $ crystal init lib my_cool_lib
@@ -75,9 +75,9 @@ $ crystal init lib my_cool_lib
 Initialized empty Git repository in ~/my_cool_lib/.git/
 ```
 
-## Other commands and options
+## 其他命令和选项
 
-To see the full set of commands, invoke `crystal` without arguments.
+要查看所有可用命令，直接输入`crystal`。
 
 ```
 $ crystal
@@ -98,7 +98,7 @@ Command:
     version, --version, -v   show version
 ```
 
-To see the available options for a particular command, use `--help` after a command:
+查看特定命令的选项，在命令后面使用`--help`：
 
 ```
 $ crystal build --help

@@ -1,6 +1,6 @@
 # Crystal 编程语言
 
-这是 Crystal 语言的参考文档。
+这是 Crystal 语言的参考文档。[目录](SUMMARY.md)
 
 Crystal 语言的设计目标如下：
 

@@ -1,7 +1,7 @@
 # 目录
 
 * [介绍](README.md)
-* [Installation](installation/README.md)
+* [安装](installation/README.md)
    * [On Debian and Ubuntu](installation/on_debian_and_ubuntu.md)
    * [On RedHat and CentOS](installation/on_redhat_and_centos.md)
    * [On Arch Linux](installation/on_arch_linux.md)
@@ -11,8 +11,8 @@
    * [On Bash on Ubuntu on Windows](installation/on_bash_on_ubuntu_on_windows.md)
    * [From a tar.gz](installation/from_a_targz.md)
    * [From sources](installation/from_source_repository.md)
-* [Using the compiler](using_the_compiler/README.md)
-* [Overview and Examples](overview/README.md)
+* [使用编译器](using_the_compiler/README.md)
+* [概览和例子](overview/README.md)
    * [Hello World!](overview/hello_world.md)
    * [HTTP Server](overview/http_server.md)
 * [Syntax and semantics](syntax_and_semantics/README.md)
