@@ -1,8 +1,8 @@
-# Fresh variables
+# 宏内变量(Fresh variables)
 
-Once macros generate code, they are parsed with a regular Crystal parser where local variables in the context of the macro invocations are assumed to be defined.
+宏一旦展开，它就会像正常的Crystal代码一样被分析，里面的代码可能涉及原作用域中已定义的变量。
 
-This is better understood with an example:
+用例子更好理解：
 
 ```crystal
 macro update_x
@@ -14,7 +14,7 @@ update_x
 x #=> 1
 ```
 
-This can sometimes be useful to avoid repetitive code by deliberately reading/writing local variables, but can also overwrite local variables by mistake. To avoid this, fresh variables can be declared with `%name`:
+有时候这个很有用，你不必特地去读/写局部变量了，不过它也可能不小心覆盖局部变量。你可以用 `%name` 创建一个宏内变量来避免这个事故：
 
 ```crystal
 macro dont_update_x
@@ -27,15 +27,15 @@ dont_update_x # outputs 1
 x #=> 0
 ```
 
-Using `%x` in the above example, we declare a variable whose name is guaranteed not to conflict with local variables in the current scope.
+上例中，我们定义的 `%x` 在编译器保证不会覆盖到现有作用域的任何一个局部变量。
 
-Additionally, fresh variables with respect to some other AST node can be declared with `%var{key1, key2, ..., keyN}`. For example:
+另外，涉及其他AST节点的宏内变量可以用 `%var{key1, key2, ..., keyN}`声明。例如：
 
 ```crystal
 macro fresh_vars_sample(*names)
   # First declare vars
   {% for name, index in names %}
-    print "Declaring: ", "%name{index}", '\n'
+    print "声明: ", "%name{index}", '\n'
     %name{index} = {{index}}
   {% end %}
 
@@ -47,13 +47,13 @@ end
 
 fresh_vars_sample a, b, c
 
-# Sample output:
-# Declaring: __temp_255
-# Declaring: __temp_256
-# Declaring: __temp_257
+# 样例输出:
+# 声明: __temp_255
+# 声明: __temp_256
+# 声明: __temp_257
 # __temp_255: 0
 # __temp_256: 1
 # __temp_257: 2
 ```
 
-In the above example, three indexed variables are declared, assigned values, and then printed, displaying their corresponding indices.
+如上，三个下标变量被生成，求值，然后打印，表示它们对应的下标。
