@@ -1,10 +1,10 @@
-# Coding Style
+# 代码风格
 
-This style is used in the standard library. You can use it in your own project to make it familiar to other developers.
+这是标准库的代码风格。你可以使用它，这样其他开发者也会熟悉你的项目。
 
-## Naming
+## 命名
 
-__Type names__ are camelcased. For example:
+**类名**用大驼峰。例如：
 
 ```crystal
 class ParseError < Exception
@@ -27,7 +27,7 @@ enum Time::DayOfWeek
 end
 ```
 
-__Method names__ are underscore-cased. For example:
+**方法名**用下划线连接。例如：
 
 ```crystal
 class Person
@@ -42,7 +42,7 @@ class Person
 end
 ```
 
-__Variable names__ are underscore-cased. For example:
+变量名也用下划线式。例如：
 
 ```crystal
 class Greeting
@@ -58,39 +58,39 @@ class Greeting
 end
 ```
 
-__Constants__ are screaming-cased. For example:
+**常量**全大写。例如： 
 
 ```crystal
 LUCKY_NUMBERS     = [3, 7, 11]
 DOCUMENTATION_URL = "http://crystal-lang.org/docs"
 ```
 
-### Acronyms
+### 缩写
 
-In class names, acronyms are _all-uppercase_. For example, `HTTP`, and `LibXML`.
+类名里面：字母缩写 *全大写*。比如 `HTTP`或 `LibXML`。
 
-In method names, acronyms are _all-lowercase_.  For example `#from_json`,  `#to_io`.
+方法名里面： 字母缩写 *全小写*。比如 `#from_json`， `#to_io`。
 
 ### Libs
 
-`Lib` names are prefixed with `Lib`. For example: `LibC`, `LibEvent2`.
+`Lib` 就用 `Lib`做前缀。比如。`LibC`， `LibEvent2`。
 
-### Directory and File Names
+### 路径和文件名
 
-Within a project:
+项目内：
 
-- `/` contains a readme, any project configurations (eg, CI or editor configs), and any other project-level documentation (eg, changelog or contributing guide).
-- `src/` contains the project's source code.
-- `spec/` contains the [project's specs](../guides/testing.md), which can be run with `crystal spec`.
-- `bin/` contains any executables.
+- `/` 含有 readme, 构建选项， (比如 CI 编辑器设置)，和其他项目级文件。 (比如 修改日志 或 贡献指南).
+- `src/` 含有项目源代码。
+- `spec/` 含有 [项目测试](../guides/testing.md)，它可以用 `crystal spec`执行。
+- `bin/` 含有可执行文件。
 
-File paths match the namespace of their contents. Files are named after the class or namespace they define, with _underscore-case_.
+文件以其类或命名空间的名字一致，用*下划线*分隔。
 
-For example, `HTTP::WebSocket` is defined in `src/http/web_socket.cr`.
+比如， `HTTP::WebSocket` 定义于 `src/http/web_socket.cr`。
 
-## Whitespace
+## 空格
 
-Use __two spaces__ to indent code inside namespaces, methods, blocks or other nested contexts. For example:
+用 **双空格** 缩进命名空间，方法，块或其他作用域内部的代码。例如：
 
 ```crystal
 module Scorecard
@@ -101,14 +101,14 @@ module Scorecard
           handle_match(match)
         end
       rescue err : ParseError
-        # handle error ...
+        # 处理错误 ...
       end
     end
   end
 end
 ```
 
-Within a class, separate method definitions, constants and inner class definitions with __one newline__. For example:
+类内，用**一行**分隔方法定义，常量，和内部类定义。比如：
 
 ```crystal
 module Money
@@ -131,8 +131,9 @@ module Money
     end
 
     def amount
-      # implement conversion ...
+      # 完成转换 ...
     end
   end
 end
 ```
+
