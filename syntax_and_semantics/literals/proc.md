@@ -1,64 +1,63 @@
-# Proc
+# 闭包(Proc)
 
-A [Proc](http://crystal-lang.org/api/Proc.html) represents a function pointer with an optional context (the closure data). It is typically created with a proc literal:
-
+[闭包](http://crystal-lang.org/api/Proc.html) 表示带有可选上下文的函数指针，通常以闭包字面量构造：
 ```crystal
-# A proc without arguments
+# 无参数闭包
 ->{ 1 } # Proc(Int32)
 
-# A proc with one argument
+# 有一个参数的闭包
 ->(x : Int32) { x.to_s } # Proc(Int32, String)
 
-# A proc with two arguments:
+# 有两个参数的闭包
 ->(x : Int32, y : Int32) { x + y } # Proc(Int32, Int32, Int32)
 ```
 
-The types of the arguments are mandatory, except when directly sending a proc literal to a lib `fun` in C bindings.
+参数的类型是必须的，除非把闭包字面量直接送给C绑定中的一个库 `fun`。
 
-The return type is inferred from the proc's body.
+返回值可以从闭包体推断出来。
 
-A special `new` method is provided too:
+另外，闭包还有一个 `new`方法：
 
 ```crystal
 Proc(Int32, String).new { |x| x.to_s } # Proc(Int32, String)
 ```
 
-This form allows you to specify the return type and to check it against the proc's body.
+这可以直接指定返回值，并且和闭包体的返回值比对。
 
-## The Proc type
+## 闭包类型
 
-To denote a Proc type you can write:
+你可以这样声明一个闭包类型：
 
 ```crystal
-# A Proc accepting a single Int32 argument and returning a String
+# 闭包接受一个 Int32 参数，返回一个 String
 Proc(Int32, String)
 
-# A proc accepting no arguments and returning Void
+# 闭包不接收参数，返回 Void
 Proc(Void)
 
-# A proc accepting two arguments (one Int32 and one String) and returning a Char
+# 闭包接受两个参数 (一个 Int32 和一个 String) ，返回一个 Char
 Proc(Int32, String, Char)
 ```
 
-In type restrictions, generic type arguments and other places where a type is expected, you can use a shorter syntax, as explained in the [type](../type_grammar.html):
+在类型限制，泛型参数和其他需要类型的地方，你可以用一个简短的语法，详见[类型](../type_grammar.html):
 
 ```crystal
-# An array of Proc(Int32, String, Char)
+# 一个由 Proc(Int32, String, Char)构成的 Array :
 Array(Int32, String -> Char)
 ```
 
-## Invoking
+## 调用
 
-To invoke a Proc, you invoke the `call` method on it. The number of arguments must match the proc's type:
+你可以用 `call`方法调用闭包参数的个数必须匹配闭包的类型：
 
 ```crystal
 proc = ->(x : Int32, y : Int32) { x + y }
 proc.call(1, 2) #=> 3
 ```
 
-## From methods
+## 从方法构造闭包
 
-A Proc can be created from an existing method:
+闭包可以从已有的方法构造：
 
 ```crystal
 def one
@@ -69,7 +68,7 @@ proc = ->one
 proc.call #=> 1
 ```
 
-If the method has arguments, you must specify their types:
+如果方法有参数，你必须确定它们的类型：
 
 ```crystal
 def plus_one(x)
@@ -79,8 +78,7 @@ end
 proc = ->plus_one(Int32)
 proc.call(41) #=> 42
 ```
-
-A proc can optionally specify a receiver:
+闭包可以可选地指定一个方法接受者：
 
 ```crystal
 str = "hello"

@@ -1,6 +1,6 @@
 # 浮点数(Floats)
 
-由两种浮点数, [Float32](http://crystal-lang.org/api/Float32.html) 和 [Float64](http://crystal-lang.org/api/Float64.html)，分别表示IEEE定义的 [binary32](http://en.wikipedia.org/wiki/Single_precision_floating-point_format)
+有两种浮点数, [Float32](http://crystal-lang.org/api/Float32.html) 和 [Float64](http://crystal-lang.org/api/Float64.html)，分别表示IEEE定义的 [binary32](http://en.wikipedia.org/wiki/Single_precision_floating-point_format)
 和 [binary64](http://en.wikipedia.org/wiki/Double_precision_floating-point_format)。
 
 浮点数字面量由可选的符号 `+` 或 `-` ，接上一系列数字和下划线，接小数点，接数字和下划线，接一个可选的指数后缀，接一个可选的类型后缀构成。
