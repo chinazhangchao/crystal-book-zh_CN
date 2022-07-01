@@ -1,23 +1,23 @@
-# Array
+# 数组(Array)
 
-An [Array](http://crystal-lang.org/api/Array.html) is an ordered and integer-indexed generic collection of elements of a specific type `T`.
+一个 [Array](http://crystal-lang.org/api/Array.html) 是可以用整数做索引的一系列`T`类型的元素。
 
-Arrays are typically created with an array literal denoted by square brackets (`[]`) and individual elements separated by a comma (`,`).
+数组往往以方括号（`[]`）包含住以逗号（`,`）分隔的一系列元素。
 
 ```crystal
 [1, 2, 3]
 ```
 
-## Generic Type Argument
+## 泛型参数
 
-The array's generic type argument `T` is inferred from the types of the elements inside the literal. When all elements of the array have the same type, `T` equals to that. Otherwise it will be a union of all element types.
+数组的泛型参数 `T` 可以从字面量的类型中推出来，如果数组里的所有元素类型都相同，那它就是那个类型。此外,它就是所有元素类型的或。
 
 ```crystal
 [1, 2, 3]          # => Array(Int32)
 [1, "hello", 'x']  # => Array(Int32 | String | Char)
 ```
 
-An explicit type can be specified by immediately following the closing bracket with `of` and a type, each separated by whitespace. This overwrites the inferred type and can be used for example to create an array that holds only some types initially but can accept other types later.
+可以用 `of` 加一个类型做显式类型标注，数组， `of` 和类型之间都要用空格隔开。这会覆盖自动推导出的类型。数组一开始只有这个类型的元素，但之后可以添加其他类型的元素。
 
 ```crystal
 array_of_numbers = [1, 2, 3] of Number  # => Array(Number)
@@ -27,37 +27,37 @@ array_of_int_or_string = [1, 3, 4] of Int32 | String  # => Array(Int32 | String)
 array_of_int_or_string + ["foo"]                      # => [1, 2, 3, "foo"]
 ```
 
-Empty array literals always need a type specification:
+空数组字面量总是需要类型标注：
 
 ```crystal
 [] of Int32  # => Array(Int32).new
 ```
 
-## Percent Array Literals
+## 百分号数组字面量
 
-[Arrays of strings](./string.html#Percent String Array Literal) and [arrays of symbols](./symbol.html#Percent Symbol Array Literal) can be created with percent array literals:
+[字符串数组](./string.html#Percent String Array Literal) 和 [符号数组](./symbol.html#Percent Symbol Array Literal) 可以用百分号字面量创建：
 
 ```crystal
 %w(one two three)  # => ["one", "two", "three"]
 %i(one two three)  # => [:one, :two, :three]
 ```
 
-## Array-like Type Literal
+## 数组式类型字面量
 
-Crystal supports an additional literal for arrays and array-like types. It consists of the name of the type followed by a list of elements enclosed in curly braces (`{}`) and individual elements separated by a comma (`,`).
+Crystal对数组和数组型类型有额外的字面量构造方法。他以类型开头，后接大括号(`{}`)，内部填入以逗号(`,`)分割的诸元素。
 
 ```crystal
 Array{1, 2, 3}
 ```
 
-This literal can be used with any type as long as it has an argless constructor and responds to `<<`.
+这适用于所有有空参构造函数，并且接受 `<<` 的类型。
 
 ```crystal
 IO::Memory{1, 2, 3}
 Set{1, 2, 3}
 ```
 
-For a non-generic type like `IO::Memory`, this is equivalent to:
+对于一个像 `IO::Memory`这样的非泛型类型，这等价于：
 
 ```crystal
 array_like = IO::Memory.new
@@ -66,7 +66,7 @@ array_like << 2
 array_like << 3
 ```
 
-For a generic type like `Set`, the generic type `T` is inferred from the types of the elements in the same way as with the array literal. The above is equivalent to:
+对于一个像 `Set`这样的泛型，它的类型参数 `T` 也像数组一样从元素的类型推导而来。上面等价于：
 
 ```crystal
 array_like = Set(typeof(1, 2, 3)).new
@@ -75,7 +75,7 @@ array_like << 2
 array_like << 3
 ```
 
-The type arguments can be explicitly specified as part of the type name:
+类型参数作为类型名的一部分显式指出：
 
 ```crystal
 Set(Number) {1, 2, 3}

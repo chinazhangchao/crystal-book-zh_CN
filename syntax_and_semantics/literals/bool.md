@@ -1,9 +1,9 @@
-# Bool
+# 布尔值(Bool)
 
-[Bool](http://crystal-lang.org/api/Bool.html) has only two possible values: `true` and `false`. They are constructed using the following literals:
+[Bool](http://crystal-lang.org/api/Bool.html) 只可能有两个值： `true` 或 `false`。它们以如下的字面量构建：
 
 
 ```crystal
-true  # A Bool that is true
-false # A Bool that is false
+true  # Bool 代表 true
+false # Bool 代表 false
 ```
