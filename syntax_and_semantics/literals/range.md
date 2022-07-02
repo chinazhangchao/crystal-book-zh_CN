@@ -1,4 +1,4 @@
-# 范围(Range0
+# 范围(Range)
 
 [范围](http://crystal-lang.org/api/Range.html) 通常以范围字面量构建:
 

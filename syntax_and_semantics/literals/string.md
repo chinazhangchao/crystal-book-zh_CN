@@ -1,47 +1,47 @@
-# String
+# 字符串(String)
 
-A [String](http://crystal-lang.org/api/String.html) represents an immutable sequence of UTF-8 characters.
+[字符串](http://crystal-lang.org/api/String.html) 代表一列不可更改的UTF-8字符。
 
-A String is typically created with a string literal enclosing UTF-8 characters in double quotes (`"`):
+字符串通常以双引号(`"`)包括的字符串字面量构建：
 
 ```crystal
 "hello world"
 ```
 
-## Escaping
+## 转义
 
-A backslash denotes a special character inside a string, which can either be a named escape sequence or a numerical representation of a unicode codepoint.
+反斜杠有特殊功能，它可以表示转义序列，也可以表示一个Unicode码点。
 
-Available escape sequences:
+可用的转义序列有：
 ```crystal
-"\"" # double quote
-"\\" # backslash
-"\a" # alert
-"\b" # backspace
-"\e" # escape
-"\f" # form feed
-"\n" # newline
-"\r" # carriage return
-"\t" # tab
-"\v" # vertical tab
-"\NNN" # octal ASCII character
-"\xNN" # hexadecimal ASCII character
-"\uNNNN" # hexadecimal unicode character
-"\u{NNNN...}" # hexadecimal unicode character
+'\'' # 单引号
+'\\' # 反斜杠
+'\a' # 警报
+'\b' # 退格
+'\e' # 退出键(escape)
+'\f' # 换页(form feed)
+'\n' # 新行
+'\r' # 回车
+'\t' # (水平)制表符
+'\v' # 垂直制表符
+"\NNN" # 八进制ASCII字符
+"\xNN" # 十六进制ASCII字符
+'\uNNNN' # 十六进制表示的Unicode字符
+'\u{NNNN...}' # 十六进制表示的Unicode字符
 ```
 
-Any other character following a backslash is interpreted as the character itself.
+反斜杠接其他任何字符都表示源字符。
 
-A backslash followed by at most three digits ranging from 0 to 7 denotes a code point written in octal:
+反斜杠接最多三个个从 0 到 7 的数，表示一个八进制格式的码点：
 
 ```crystal
 "\101" # => "A"
 "\123" # => "S"
 "\12"  # => "\n"
-"\1"   # string with one character with code point 1
+"\1"   # 只有一个码点为 1 的字符的字符串
 ```
 
-A backslash followed by a `u` denotes a unicode codepoint. It can either be followed by exactly four hexadecimal characters representing the unicode bytes (`\u0000` to `\uFFFF`) or a number of one to six hexadecimal characters wrapped in curly braces (`\u{0}` to `\u{10FFFF}`.
+反斜杠接 `u` 表示一个Unicode码点。它既可以接正好四个十六进制字符(`\u0000` to `\uFFFF`)，也可以接由花括号标注的1-6个字符十六进制字符(`\u{0}` to `\u{10FFFF}`)。 
 
 ```crystal
 "\u0041"    # => "A"
@@ -49,15 +49,15 @@ A backslash followed by a `u` denotes a unicode codepoint. It can either be foll
 "\u{1F52E}" # => "&#x1F52E;"
 ```
 
-One curly brace can contain multiple unicode characters each separated by a whitespace.
+只有大括号可以包含多个Unicode字符。字符之间用空白字符分隔。
 
 ```crystal
 "\u{48 45 4C 4C 4F}" # => "HELLO"
 ```
 
-## Interpolation
+## 插值
 
-A string literal with interpolation allows to embed expressions into the string which will be expanded at runtime.
+字符串字面量可以使用插值表达式来在运行时展开。
 
 ```crystal
 a = 1
@@ -65,18 +65,18 @@ b = 2
 "sum: #{a} + #{b} = #{a + b}" # => "sum: 1 + 2 = 3"
 ```
 
-String interpolation is also possible with [String#%](https://crystal-lang.org/api/master/String.html#%25(other)-instance-method).
+字符串插值也可以用 [String#%](https://crystal-lang.org/api/master/String.html#%25(other)-instance-method)完成。
 
-Any expression may be placed inside the interpolated section, but it’s best to keep the expression small for readability.
+插值部分可以放任何表达式，但是为了可读性，表达式最好小一些。
 
-Interpolation can be disabled by escaping the `#` character with a backslash or by using a non-interpolating string literal like `%q()`.
+可以转义 `#` 号以取消插值，或是使用没有插值的字符串，比如 `%q()`。
 
 ```crystal
 "\#{a + b}"  # => "#{a + b}"
 %q(#{a + b}) # => "#{a + b}"
 ```
 
-Interpolation is implemented using a [String::Builder](http://crystal-lang.org/api/String/Builder.html) and invoking `Object#to_s(IO)` on each expression enclosed by `#{...}`. The expression `"sum: #{a} + #{b} = #{a + b}"` is equivalent to:
+插值是通过 创建[String::Builder](http://crystal-lang.org/api/String/Builder.html) 和对每个插入 `#{...}`中的表达式调用`Object#to_s(IO)`来完成的。表达式 `"sum: #{a} + #{b} = #{a + b}"` 等价于：
 
 ```crystal
 String.build do |io|
@@ -89,7 +89,7 @@ String.build do |io|
 end
 ```
 
-# Percent string literals
+# 百分号字符串字面量
 
 Besides double-quotes strings, Crystal also supports string literals indicated by a percent sign (`%`) and a pair of delimiters. Valid delimiters are parenthesis `()`, square brackets `[]`, curly braces `{}`, angles `<>` and pipes `||`. Except for the pipes, all delimiters can be nested meaning a start delimiter inside the string escapes the next end delimiter.
 

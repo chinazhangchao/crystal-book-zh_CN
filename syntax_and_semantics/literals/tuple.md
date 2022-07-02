@@ -1,6 +1,6 @@
-# Tuple
+# 元组(Tuple)
 
-A [Tuple](http://crystal-lang.org/api/Tuple.html) is typically created with a tuple literal:
+[元组](http://crystal-lang.org/api/Tuple.html) 通常以元组字面量创建：
 
 ```crystal
 tuple = {1, "hello", 'x'} # Tuple(Int32, String, Char)
@@ -9,16 +9,16 @@ tuple[1]                  #=> "hello" (String)
 tuple[2]                  #=> 'x'     (Char)
 ```
 
-To create an empty tuple use [Tuple.new](http://crystal-lang.org/api/Tuple.html#new%28%2Aargs%29-class-method).
+[Tuple.new](http://crystal-lang.org/api/Tuple.html#new%28%2Aargs%29-class-method)可以创建空元组。
 
-To denote a tuple type you can write:
+以下方法可以声明一个元组类型：
 
 ```crystal
-# The type denoting a tuple of Int32, String and Char
+# 这表示包含 Int32, String 和 Char 的元组。
 Tuple(Int32, String, Char)
 ```
 
-In type restrictions, generic type arguments and other places where a type is expected, you can use a shorter syntax, as explained in the [type grammar](../type_grammar.html):
+在类型声明，泛型参数和其他需要类型的地方，你可以用简便的语法，详见[类型语法](../type_grammar.html):
 
 ```crystal
 # An array of tuples of Int32, String and Char

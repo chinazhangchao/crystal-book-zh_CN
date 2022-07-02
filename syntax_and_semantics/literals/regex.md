@@ -1,49 +1,50 @@
-# Regular Expressions
+# 正则表达式(Regular Expressions)
 
-Regular expressions are represented by the [Regex](http://crystal-lang.org/api/Regex.html) class.
+正则表达式以 [Regex](http://crystal-lang.org/api/Regex.html) 类表示。
 
-A Regex is typically created with a regex literal using [PCRE](http://pcre.org/pcre.txt) syntax. It consists of a string of UTF-8 character enclosed in forward slashes (`/`):
+正则表达式往往由正则字面量遵循 [PCRE](http://pcre.org/pcre.txt)语法构建。它由用正斜杠(`/`)包含的 UTF-8字符构成：
 
 ```crystal
 /foo|bar/
 /h(e+)llo/
 /\d+/
 /あ/
+/啊/
 ```
 
-## Escaping
+## 转义
 
-Regular expressions support the same [escape sequences as String literals](./string.html).
+正则表达式大转义遵循[字符串字面量的转义](./string.html).
 
 ```crystal
-/\// # slash
-/\\/ # backslash
-/\b/ # backspace
-/\e/ # escape
-/\f/ # form feed
-/\n/ # newline
-/\r/ # carriage return
-/\t/ # tab
-/\v/ # vertical tab
-/\NNN/ # octal ASCII character
-/\xNN/ # hexadecimal ASCII character
-/\uNNNN/ # hexadecimal unicode character
-/\u{NNNN...}/ # hexadecimal unicode character
+'\'' # 单引号
+'\\' # 反斜杠
+'\a' # 警报
+'\b' # 退格
+'\e' # 退出键(escape)
+'\f' # 换页(form feed)
+'\n' # 新行
+'\r' # 回车
+'\t' # (水平)制表符
+'\v' # 垂直制表符
+'\uNNNN' # 十六进制表示的Unicode字符
+'\u{NNNN...}' # 十六进制表示的Unicode字符
 ```
 
-The delimiter character `/` must be escaped inside slash-delimited regular expression literals.
-Note that special characters of the PCRE syntax need to be escaped if they are intended as literal characters.
+分隔符 `/` 在用正斜杠包裹的字符串中也必须转义。
+注意：如果PCRE中的特殊字符想要以字面方式使用，那也需要转义。
 
-## Interpolation
+## 插值
 
-Interpolation works in regular expression literals just as it does in [string literals](./string.html). Be aware that using this feature will cause an exception to be raised at runtime, if the resulting string results in an invalid regular expression.
+正则表达式字面量中的转义如同 [字符串字面量](./string.html). 注意如果插值得到的字符串不能构成一个正则表达式，那么这会导致运行期异常。
 
-## Modifiers
-The closing delimiter may be followed by a number of optional modifiers to adjust the matching behaviour of the regular expression.
+## 模式设定
+尾部分隔符可以加后缀来改变正则表达式的匹配模式。
 
-* `i`: case-insensitive matching (`PCRE_CASELESS`):  Unicode letters in the pattern match both upper and lower case letters in the subject string.
-* `m`: multiline matching (`PCRE_MULTILINE`): The *start of line* (`^`) and *end of line* (`$`) metacharacters match immediately following or immediately before internal newlines in the subject string, respectively, as well as at the very start and end.
-* `x`: extended whitespace matching (`PCRE_EXTENDED`): Most white space characters in the pattern are totally ignored except when ignore or inside a character class. Unescaped hash characters `#` denote the start of a comment ranging to the end of the line.
+* `i`: 忽略大小写 (`PCRE_CASELESS`):  Unicode 字母既可以匹配目标中的大写字母，也可以匹配小写字母。
+* `m`: 多行匹配 (`PCRE_MULTILINE`): *行首* (`^`) 和 *行尾* (`$`) 匹配字符串行之间空格的刚开始，或是结束前。
+* `x`: 扩展空白符号匹配(extended whitespace matching) (`PCRE_EXTENDED`): 模式里的大多数空白字符都被忽略，除非在另外一个字符类中。不被转义的井号`#`表示从它开始的一行注释，直到行尾。
+> 译注: 此处原文为 : Most white space characters in the pattern are totally ignored except when ignore or inside a character class. Unescaped hash characters `#` denote the start of a comment ranging to the end of the line.
 
 ```crystal
 /foo/i.match("FOO")         # => #<Regex::MatchData "FOO">
@@ -52,11 +53,11 @@ The closing delimiter may be followed by a number of optional modifiers to adjus
 /foo /imx.match("bar\nFOO") # => #<Regex::MatchData "FOO">
 ```
 
-## Percent regex literals
+## 百分号正则字面量
 
-Besides slash-delimited literals, regular expressions may also be expressed as a percent literal indicated by `%r` and a pair of delimiters. Valid delimiters are parenthesis `()`, square brackets `[]`, curly braces `{}`, angles `<>` and pipes `||`. Except for the pipes, all delimiters can be nested meaning a start delimiter inside the literal escapes the next end delimiter.
+除了斜杠字面量,正则表达式还可以以 `%r` 接一对分隔符的方式构建。可用的分隔符是圆括号 `()`，方括号 `[]`，花括号 `{}`，尖括号 `<>`和竖杠 `||`. 除了竖杠，其他的分隔符都可以嵌套。
 
-These are handy to write regular expressions that include slashes which would have to be escaped in slash-delimited literals.
+它们对于写包含正斜杠的正则表达式很有用。
 
 ```crystal
 %r((/)) # => /(\/)/
