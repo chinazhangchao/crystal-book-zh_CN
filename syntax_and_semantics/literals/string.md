@@ -91,9 +91,9 @@ end
 
 # 百分号字符串字面量
 
-Besides double-quotes strings, Crystal also supports string literals indicated by a percent sign (`%`) and a pair of delimiters. Valid delimiters are parenthesis `()`, square brackets `[]`, curly braces `{}`, angles `<>` and pipes `||`. Except for the pipes, all delimiters can be nested meaning a start delimiter inside the string escapes the next end delimiter.
+除了双引号形式的字符串，Crystal也支持百分号 (`%`)接一对分隔符构成的字面量.可用的分隔符是圆括号`()`，方括号 `[]`，花括号`{}`，尖括号  `<>`和竖杠。除了竖杠，其他的分隔符都可以嵌套，在内部如同普通的字符。
 
-These are handy to write strings that include double quotes which would have to be escaped in double-quoted strings.
+这个在写包含双引号的字符串时很有用，你不用手动转义每个双引号了。
 
 ```crystal
 %(hello ("world")) # => "hello (\"world\")"
@@ -103,7 +103,7 @@ These are handy to write strings that include double quotes which would have to 
 %|hello "world"|   # => "hello \"world\""
 ```
 
-A literal denoted by `%q` does not apply interpolation nor escapes while `%Q` has the same meaning as `%`.
+ `%q` 开头的字面量不接受转义或插值，而 `%Q`的意思等同于 `%`.
 
 ```crystal
 name = "world"
@@ -111,39 +111,36 @@ name = "world"
 %Q(hello \n #{name}) # => "hello \n world"
 ```
 
-## Multiline strings
+## 多行字符串
 
-Any string literal can span multiple lines:
+任何一个字面量都可以跨多行：
 
 ```crystal
 "hello
       world" # => "hello\n      world"
 ```
 
-Note that in the above example trailing and leading spaces, as well as newlines,
-end up in the resulting string. To avoid this a string can be split into multiple lines
-by joining multiple literals with a backslash:
+注意，在上面的例子里面尾随或前置的空格，新行，也在结果的字符串里面。你可以设多个字符串，然后用反斜杠连接：
 
 ```crystal
 "hello " \
 "world, " \
-"no newlines" # same as "hello world, no newlines"
+"no newlines" # 等同于 "hello world, no newlines"
 ```
 
-Alternatively, a backslash followed by a newline can be inserted inside the string literal:
+另外，一个反斜杠接新行可以在字符串里取消新行。
 
 ```crystal
 "hello \
      world, \
-     no newlines" # same as "hello world, no newlines"
+     no newlines" # 等同于 "hello world, no newlines"
 ```
 
-In this case, leading whitespace is not included in the resulting string.
+此时前置的空白符号不算在字符串中。
 
-## Heredoc
+## 立即文档(Heredoc)
 
-A *here document* or *heredoc* can be useful for writing strings spanning over multiple lines.
-A heredoc is denoted by `<<-` followed by an heredoc identifier which is an alphanumeric sequence starting with a letter (and may include underscores). The heredoc starts in the following line and ends with the next line that starts with the heredoc identifier (ignoring leading whitespace) and is either followed by a newline or a non-alphanumeric character.
+一个 *立即文档* (英文为*heredoc*) 用于创建涉及多行的字符串时很有用。立即文档以 `<<-` 一个标识符(包含字母,数字,下划线)起头,正文从下一行开始,到看到开头的那个标识符时结尾，忽略新行和其他的空白字符。
 
 ```crystal
 <<-XML
@@ -153,7 +150,7 @@ A heredoc is denoted by `<<-` followed by an heredoc identifier which is an alph
 XML
 ```
 
-Leading whitespace is removed from the heredoc contents according to the number of whitespace in the last line before the heredoc identifier.
+空白字符会根据末尾标识符出现的位置进行剪裁，裁掉标识符之前的部分。
 
 ```crystal
 <<-STRING
@@ -167,7 +164,7 @@ Leading whitespace is removed from the heredoc contents according to the number 
   STRING # => "  Hello\n    world"
 ```
 
-It is possible to directly call methods on heredoc string literals, or use them inside parentheses:
+可以直接调用立即文档的方法(因为他也是一个字符串)，也可以在括号内使用它。
 
 ```crystal
 <<-SOME
@@ -183,9 +180,9 @@ upcase(<<-SOME
   SOME) # => "HELLO"
 ```
 
-A heredoc generally allows interpolation and escapes.
+立即文档通常允许插值和转义。
 
-To denote a heredoc without interpolation or escapes, the opening heredoc identifier is enclosed in single quotes:
+可以通过在开头对标识符加单引号来禁止转义：
 
 ```crystal
 <<-'HERE'
