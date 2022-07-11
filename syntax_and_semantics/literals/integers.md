@@ -1,8 +1,8 @@
-# Integers
+# 整数(Integer)
 
-There are four signed integer types, and four unsigned integer types:
+整数有四种有符号类型，和四种无符号类型：
 
-Type | Length  | Minimum Value | Maximum Value
+类型 | 长度  | 最小值 | 最大值
  ---------- | -----------: | -----------: |-----------:
 [Int8](http://crystal-lang.org/api/Int8.html)  | 8       | -128 | 127
 [Int16](http://crystal-lang.org/api/Int16.html)  | 16 | −32,768 | 32,767
@@ -13,10 +13,9 @@ Type | Length  | Minimum Value | Maximum Value
 [UInt32](http://crystal-lang.org/api/UInt32.html) | 32 |  0 | 4,294,967,295
 [UInt64](http://crystal-lang.org/api/UInt64.html) | 64 | 0 | 2<sup>64</sup> - 1
 
-An integer literal is an optional `+` or `-` sign, followed by
-a sequence of digits and underscores, optionally followed by a suffix.
-If no suffix is present, the literal's type is the lowest between `Int32`, `Int64` and `UInt64`
-in which the number fits:
+一个整数字面量由可选的 `+` 或 `-` 符号加上数字和下划线的序列构成，后面可以有后缀。
+
+如果没有后缀，整数的类型就是 `Int32`， `Int64` 和 `UInt64` 之中能装下它的最小的一个：
 
 ```crystal
 1      # Int32
@@ -38,27 +37,27 @@ in which the number fits:
 9223372036854775808 # UInt64
 ```
 
-The underscore `_` before the suffix is optional.
+后缀之前的下划线 `_` 是可选的 。
 
-Underscores can be used to make some numbers more readable:
+下划线可以增加可读性：
 
 ```crystal
-1_000_000 # better than 1000000
+1_000_000 # 优于 1000000
 ```
 
-Binary numbers start with `0b`:
+二进制数以 `0b`开头：
 
 ```crystal
 0b1101 # == 13
 ```
 
-Octal numbers start with a `0o`:
+八进制数以 `0o`开头：
 
 ```crystal
 0o123 # == 83
 ```
 
-Hexadecimal numbers start with `0x`:
+十六进制数以 `0x`开头：
 
 ```crystal
 0xFE012D # == 16646445

@@ -1,6 +1,6 @@
-# NamedTuple
+# 命名元组(NamedTuple(
 
-A [NamedTuple](http://crystal-lang.org/api/NamedTuple.html) is typically created with a named tuple literal:
+[命名元组](http://crystal-lang.org/api/NamedTuple.html)往往由元组字面量产生：
 
 ```crystal
 tuple = {name: "Crystal", year: 2011} # NamedTuple(name: String, year: Int32)
@@ -8,22 +8,22 @@ tuple[:name] # => "Crystal" (String)
 tuple[:year] # => 2011      (Int32)
 ```
 
-To denote a named tuple type you can write:
+可以用如下方法声明一个命名元组：
 
 ```crystal
-# The type denoting a named tuple of x: Int32, y: String
+# 这个表示命名元组 x: Int32, y: String 的类型：
 NamedTuple(x: Int32, y: String)
 ```
 
-In type restrictions, generic type arguments and other places where a type is expected, you can use a shorter syntax, as explained in the [type grammar](../type_grammar.html):
+在类型限制，泛型参数或其他需要类型的地方，你可以用更简短的语法，见[类型语法](../type_grammar.html):
 
 ```crystal
-# An array of named tuples of x: Int32, y: String
+# 元组 {x: Int32, y: String}构成的数组
 Array({x: Int32, y: String})
 ```
 
-A named tuple key can also be a string literal:
+元组的键也可以是字符串字面量:
 
 ```crystal
-{"this is a key": 1}
+{"这是键": 1}
 ```

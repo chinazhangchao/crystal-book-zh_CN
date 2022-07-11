@@ -1,14 +1,13 @@
-# Hooks
+# 钩子(Hooks)
 
-Special macros exist that are invoked in some situations as hooks, at compile time:
-* `inherited` is invoked when a subclass is defined. `@type` is the inheriting type.
-* `included` is invoked when a module is included. `@type` is the including type.
-* `extended` is invoked when a module is extended. `@type` is the extending type.
-* `method_missing` is invoked when a method is not found.
-* `method_added` is invoked when a new method is defined in the current scope.
-* `finished` is invoked after instance variable types for all classes are known.
+在编译期，一些特殊的宏会作为钩子，在特定的时期调用：
+* `inherited` 当子类定义时调用。 `@type` 是继承它的类型。
+* `included` 当模块被包含时调用。 `@type` 是包含它的类型。
+* `extended` 当模块被扩展时调用 `@type` 是扩展它的类型。
+* `method_missing` 当方法没有找到时调用。
+* `method_added` 当当前域有新方法添加时调用。
 
-Example of `inherited`:
+`inherited`的例子
 
 ```crystal
 class Parent
@@ -25,59 +24,59 @@ end
 Child.new.lineage #=> "Child < Parent"
 ```
 
-Example of `method_missing`:
+`method_missing`的例子：
 
 ```crystal
 macro method_missing(call)
-  print "Got ", {{call.name.id.stringify}}, " with ", {{call.args.size}}, " arguments", '\n'
+  print "尝试调用 ", {{call.name.id.stringify}}, " 用 ", {{call.args.size}}, " 个参数", '\n'
 end
 
-foo          # Prints: Got foo with 0 arguments
-bar 'a', 'b' # Prints: Got bar with 2 arguments
+foo          # 输出: 尝试调用 foo 用 0 个参数
+bar 'a', 'b' # 输出: 尝试调用 bar 用 2 个参数
 ```
 
-Example of `method_added`:
+`method_added`的例子：
 
 ```crystal
 macro method_added(method)
-  {% puts "Method added:", method.name.stringify %}
+  {% puts "方法添加:", method.name.stringify %}
 end
 
 def generate_random_number
   4
 end
-#=> Method added: generate_random_number 
+#=> 方法添加: generate_random_number 
 ```
 
-Both `method_missing` and `method_added` only apply to calls or methods in the same class that the macro is defined in, or only in the top level if the macro is defined outside of a class. For example:
+`method_missing` 和 `method_added` 都只在宏被定义的域内调用。或者，如果宏在顶层定义，那就在顶层调用。例如：
 
 ```crystal
 macro method_missing(call)
-  puts "In outer scope, got call: ", {{ call.name.stringify }}
+  puts "在外部域, 得到调用: ", {{ call.name.stringify }}
 end
 
 class SomeClass
   macro method_missing(call)
-    puts "Inside SomeClass, got call: ", {{ call.name.stringify }}
+    puts "在某类内, 尝试调用: ", {{ call.name.stringify }}
   end
 end
 
 class OtherClass
 end
 
-# This call is handled by the top-level `method_missing`
-foo #=> In outer scope, got call: foo
+# 这次调用被外部的`method_missing`处理
+foo #=> 在外部域, 得到调用: foo
 
 obj = SomeClass.new
-# This is handled by the one inside SomeClass
-obj.bar #=> Inside SomeClass, got call: bar
+# 这个由在类内的`method_missing`处理
+obj.bar #=> 在某类内, 尝试调用: bar
 
 other = OtherClass.new
-# Neither OtherClass or its parents define a `method_missing` macro
-other.baz #=> Error: Undefined method 'baz' for OtherClass
+# 不论是OtherClass还是它的父类都没有定义 `method_missing`
+other.baz #=> 错误: 未定义的方法 'baz' 于 OtherClass 中
 ```
 
-`finished` is called once a type has been completely defined - this includes extensions on that class. Consider the following program:
+`finished` 在类型被完全定义时调用------即是类型的每一处扩展都完成的时候。看如下程序：
 
 ```crystal
 macro print_methods
@@ -93,11 +92,11 @@ end
 
 class Foo
   def bar
-    puts "I'm a method!"
+    puts "我是一个方法！"
   end
 end
 
 Foo.new.bar
 ```
 
-The `print_methods` macro will be run as soon as it is encountered - and will print an empty list as there are no methods defined at that point. Once the second declaration of `Foo` is compiled the `finished` macro will be run, which will print `[bar]`.
+`print_methods` 宏在遇到的时候就调用——然后打出一个空列表，因为这时候`Foo`里面还没有什么方法。当  `Foo` 的第二次也是最后一次被定义时， `finished` 宏会被调用，然后打出 `[bar]`。
