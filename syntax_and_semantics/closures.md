@@ -1,6 +1,6 @@
-# Closures
+# 闭包(Closures)
 
-Captured blocks and proc literals closure local variables and `self`. This is better understood with an example:
+闭包把块,Captured blocks and proc literals closure local variables and `self`. This is better understood with an example:
 
 ```crystal
 x = 0

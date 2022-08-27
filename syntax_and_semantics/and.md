@@ -1,13 +1,13 @@
-# && - Logical AND Operator
+# && - 逻辑与运算符
 
-An `&&` (and) evaluates its left hand side. If it's *truthy*, it evaluates its right hand side and has that value. Otherwise it has the value of the left hand side. Its type is the union of the types of both sides.
+`&&` (与) 先求其左式的值。如果左边*是真的*，它的值就是其右边的值。否则它的值就是左式的值(多半是 `false` 或`nil`)。他的类型是左右两边类型的或。
 
-You can think an `&&` as syntax sugar of an `if`:
+你可以认为 `&&` 是 `if`的语法糖：
 
 ```crystal
 some_exp1 && some_exp2
 
-# The above is the same as:
+#上式等同于:
 tmp = some_exp1
 if tmp
   some_exp2

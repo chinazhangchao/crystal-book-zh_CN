@@ -1,64 +1,64 @@
-# Assignment
+# 赋值
 
-Assignment is done with the equals (`=`) character.
+等号 (`=`) 表示赋值操作。
 
 ```crystal
-# Assigns to a local variable
+# 向局部变量赋值
 local = 1
 
-# Assigns to an instance variable
+# 向实例变量赋值
 @instance = 2
 
-# Assigns to a class variable
+# 向类变量赋值
 @@class = 3
 ```
 
-Each of the above kinds of variables will be explained later on.
+上述三种赋值操作将随后解释。
 
-Some syntax sugar that contains the `=` character is available:
+有一些包含 `=`的语法糖也可用于赋值：
 
 ```crystal
-local += 1  # same as: local = local + 1
+local += 1  # 等同于: local = local + 1
 
-# The above is valid with these operators:
+# 上述操作可用于这些运算符：
 # +, -, *, /, %, |, &, ^, **, <<, >>
 
-local ||= 1 # same as: local || (local = 1)
-local &&= 1 # same as: local && (local = 1)
+local ||= 1 # 等同于: local || (local = 1)
+local &&= 1 # 等同于: local && (local = 1)
 ```
 
-A method invocation that ends with `=` has syntax sugar:
+以 `=`结尾的方法有语法糖：
 
 ```crystal
-# A setter
+# setter
 person.name=("John")
 
-# The above can be written as:
+# 上式等同于：
 person.name = "John"
 
-# An indexed assignment
+# 下标寻址加赋值
 objects.[]=(2, 3)
 
-# The above can be written as:
+# 上式等同于：
 objects[2] = 3
 
-# Not assignment-related, but also syntax sugar:
+# 并不是赋值，但也有语法糖
 objects.[](2, 3)
 
-# The above can be written as:
+# 上式等同于：
 objects[2, 3]
 ```
 
-The `=` operator syntax sugar is also available to setters and indexers. Note that `||` and `&&` use the `[]?` method to check for key presence.
+`=` 运算符对设置和索引操作也有语法糖。注意， `||` 和 `&&` 使用 `[]?` 方法检查键是否存在。
 
 ```crystal
-person.age += 1        # same as: person.age = person.age + 1
+person.age += 1        # 等同于: person.age = person.age + 1
 
-person.name ||= "John" # same as: person.name || (person.name = "John")
-person.name &&= "John" # same as: person.name && (person.name = "John")
+person.name ||= "John" # 等同于: person.name || (person.name = "John")
+person.name &&= "John" # 等同于: person.name && (person.name = "John")
 
-objects[1] += 2        # same as: objects[1] = objects[1] + 2
+objects[1] += 2        # 等同于: objects[1] = objects[1] + 2
 
-objects[1] ||= 2       # same as: objects[1]? || (objects[1] = 2)
-objects[1] &&= 2       # same as: objects[1]? && (objects[1] = 2)
+objects[1] ||= 2       # 等同于: objects[1]? || (objects[1] = 2)
+objects[1] &&= 2       # 等同于: objects[1]? && (objects[1] = 2)
 ```
