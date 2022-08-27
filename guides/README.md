@@ -1,3 +1,3 @@
-# Guides
+# 导引
 
-Read these guides to get the best out of Crystal.
+这些导引帮助你激发Crystal的全部能力.
