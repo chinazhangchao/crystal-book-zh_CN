@@ -6,7 +6,7 @@
 * [字面量](literals.html)
 * [赋值](assignment.html)
 * [局部变量](local_variables.html)
-* [控制表达式](control_expressions.html)
+* [控制结构](control_expressions.html)
 * [调入文档](requiring_files.html)
 * [类型和方法](types_and_methods.html)
 * [异常处理](exception_handling.html)
