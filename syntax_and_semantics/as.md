@@ -1,6 +1,6 @@
 # as
 
-The `as` pseudo-method restricts the types of an expression. For example:
+`as` 伪方法可以限制表达式的类型。比如：
 
 ```crystal
 if some_condition
@@ -12,58 +12,57 @@ end
 # a : Int32 | String
 ```
 
-In the above code, `a` is a union of `Int32 | String`. If for some reason we are sure `a` is an `Int32` after the `if`, we can force the compiler to treat it like one:
+在上述代码中，`a` 是或类型 `Int32 | String`。如果在 `if` 表达式之后还要把 `a` 用作 `Int32` ，我们可以强制编译器把它视为 `Int32`：
 
 ```crystal
 a_as_int = a.as(Int32)
-a_as_int.abs          # works, compiler knows that a_as_int is Int32
+a_as_int.abs          # 行，编译器知道 a_as_int 是 Int32
 ```
 
-The `as` pseudo-method performs a runtime check: if `a` wasn't an `Int32`, an [exception](exception_handling.html) is raised.
+`as`伪方法会在运行时检查： 如果`a` 不是 `Int32`，就抛出一个 [exception](exception_handling.html)。 raised.
 
-The argument to the expression is a [type](type_grammar.html).
+表达式的形参是一个 [类型](type_grammar.html).
 
-If it is impossible for a type to be restricted by another type, a compile-time error is issued:
+如果一个类型不可能攒成另一个类型，那么会产生编译错误：
 
 ```crystal
-1.as(String) # Compile-time error
+1.as(String) # 编译错误
 ```
 
-**Note: ** you can't use `as` to convert a type to an unrelated type: `as` is not like a `cast` in other languages. Methods on integers, floats and chars are provided for these conversions. Alternatively, use pointer casts as explained below.
+**注意：** 你不能用 `as` 把一个类型转成不相关的另一个： `as` 不是其他语言中的 `cast`。整数，浮点数，字符都为这些转换提供了方法。不过，可以对指针进行转换，方法如下：
 
-## Converting between pointer types
+## 指针类型互转
 
-The `as` pseudo-method also allows to cast between pointer types:
+`as` 伪方法也用于转换不同类型的指针：
 
 ```crystal
 ptr = Pointer(Int32).malloc(1)
 ptr.as(Int8*)                    #:: Pointer(Int8)
 ```
 
-In this case, no runtime checks are done: pointers are unsafe and this type of casting is usually only needed in C bindings and low-level code.
+这种情况不会要求运行时检查：指针本来就不安全，并且这种转换往往用于绑定C函数或其他更底层的代码。
 
-## Converting between pointer types and other types
+## 指针与其他类型互转
 
-Conversion between pointer types and Reference types is also possible:
+指针也可以与成其他类型互相转换：
 
 ```crystal
 array = [1, 2, 3]
 
-# object_id returns the address of an object in memory,
-# so we create a pointer with that address
+# object_id 返回这个对象在内存中的地址
+# 所以我们用这个地址创建指针
 ptr = Pointer(Void).new(array.object_id)
 
-# Now we cast that pointer to the same type, and
-# we should get the same value
+# 我们把指针转换成别的类型，但是它们指向的地址一样，因此是相等的。
 array2 = ptr.as(Array(Int32))
 array2.same?(array) #=> true
 ```
 
-No runtime checks are performed in these cases because, again, pointers are involved. The need for this cast is even more rare than the previous one, but allows to implement some core types (like String) in Crystal itself, and it also allows passing a Reference type to C functions by casting it to a void pointer.
+由于涉及指针，这里没有进行运行时检查。这种用法比上一个更少见，但是允许Crystal自己去实现一些核心类型(比如String)，由此也可以把引用类型当做void*传给C函数。
 
-## Usage for casting to a bigger type
+## 转换到更弱的类型
 
-The `as` pseudo-method can be used to cast an expression to a "bigger" type. For example:
+The `as` 伪方法可以把表达式转给*更弱的*类型。比如：
 
 ```crystal
 a = 1
@@ -71,23 +70,23 @@ b = a.as(Int32 | Float64)
 b #:: Int32 | Float64
 ```
 
-The above might not seem to be useful, but it is when, for example, mapping an array of elements:
+也许不那么有用。但有时也能派上用场，比如映射数组中的元素：
 
 ```crystal
 ary = [1, 2, 3]
 
-# We want to create an array 1, 2, 3 of Int32 | Float64
+# 通过数组 1, 2, 3 构建 Int32 | Float64 数组
 ary2 = ary.map { |x| x.as(Int32 | Float64) }
 
 ary2 #:: Array(Int32 | Float64)
 ary2 << 1.5 # OK
 ```
 
-The `Array#map` method uses the block's type as the generic type for the Array. Without the `as` pseudo-method, the inferred type would have been `Int32` and we wouldn't have been able to add a `Float64` into it.
+`Array#map` 方法认为block的返回类型就是数组的类型。如果没有 `as` 伪方法，推到出来的类型就是 `Int32`我们就不能把 `Float64`加进去。
 
-## Usage for when the compiler can't infer the type of a block
+## 如果编译器推导不出块的类型
 
-Sometimes the compiler can't infer the type of a block. This can happen in recursive calls that depend on each other. In those cases you can use `as` to let it know the type:
+有时编译器推导不出块的类型，比如递归调用互相依赖起来的时候。此时你可以用 `as`提醒编译器：
 
 ```crystal
 some_call { |v| v.method.as(ExpectedType) }

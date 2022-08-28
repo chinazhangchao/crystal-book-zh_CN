@@ -1,7 +1,9 @@
-# Comments
+# 注释
 
-Comments start with the `#` character. Only one-line comments are supported for now.
+注释以 `#` 开始，持续一行。
+
+目前只支持单行注释。
 
 ```crystal
-# This is a comment
+# 这是注释
 ```

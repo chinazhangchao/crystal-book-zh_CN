@@ -1,14 +1,14 @@
-# As a suffix
+# 作为后缀
 
-An `if` can be written as an expression’s suffix:
+`if` 可以写在表达式后，作为后缀：
 
 ```crystal
-a = 2 if some_condition
+a = 2 if 某些条件
 
-# The above is the same as:
-if some_condition
+# 上式等同于：
+if 某些条件
   a = 2
 end
 ```
 
-This sometimes leads to code that is more natural to read.
+有时这会使代码看起来自然。

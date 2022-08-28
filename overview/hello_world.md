@@ -1,10 +1,10 @@
 # Hello World!
 
-The classic "hello world" program looks like this in Crystal:
+经典的 "hello world"程序在 Crystal中像这样：
 
 ```crystal
 puts "Hello world!"
 ```
 
-From this you can see that the main routine is simply the program itself: there's no need to define a "main" function or something similar.
+由此你可以看出来程序的主函数就是程序自己：没有必要像其他语言一样定义什么主函数。
 
