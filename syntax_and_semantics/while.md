@@ -1,6 +1,6 @@
 # while
 
-A `while` executes its body as long as its condition is *truthy*.
+`while`表达式只要条件是*真*的,就执行它的内容。
 
 ```crystal
 while some_condition
@@ -8,13 +8,13 @@ while some_condition
 end
 ```
 
-The condition is first tested and, if *truthy*, the body is executed. That is, the body might never be executed.
+`while`先测试条件，如果为 *真*，就执行主体。即，也许主体根本不会被执行(如果条件一开始就是假的)。 
 
-A `while`'s type is always `Nil`.
+`while`的类型永远是 `Nil`.
 
-Similar to an `if`, if a `while`'s condition is a variable, the variable is guaranteed to not be `nil` inside the body. If the condition is an `var.is_a?(Type)` test, `var` is guaranteed to be of type `Type` inside the body. And if the condition is a `var.responds_to?(:method)`, `var` is guaranteed to be of a type that responds to that method.
+类似于 `if`,如果 `while`的条件是一个变量，这个变量在循环体中保证不是`nil`。如果条件是测试 `var.is_a?(Type)`， `var` 就保证是 `Type`的那个类型。如果条件是 `var.responds_to?(:method)`， `var`就保证能响应这个方法。
 
-The type of a variable after a `while` depends on the type it had before the `while` and the type it had before leaving the `while`'s body:
+`while` 之后，一个变量的类型取决于他在 `while` 之前的值，以及 `while` 中对他的最后一次赋值：
 
 ```crystal
 a = 1
@@ -27,9 +27,9 @@ end
 # a : Int32 | String
 ```
 
-## Checking the condition at the end of a loop
+## 在循环结尾检查条件
 
-If you need to execute the body at least once and then check for a breaking condition, you can do this:
+如果你至少要执行一次循环体，然后检查是否跳出，你可以这么做：
 
 ```crystal
 while true
@@ -38,7 +38,7 @@ while true
 end
 ```
 
-Or use `loop`, found in the standard library:
+或者使用标准库里的 `loop`：
 
 ```crystal
 loop do

@@ -1,18 +1,18 @@
 # break
 
-You can use `break` to break out of a `while` loop:
+你可以使用 `break` 跳出`while` 循环：
 
 ```crystal
 a = 2
 while (a += 1) < 20
   if a == 10
-    break # goes to 'puts a'
+    break # 跳到 'puts a'
   end
 end
 puts a #=> 10
 ```
 
-`break` can also take a parameter which will then be the value that gets returned:
+`break` 也可以带一个参数，这会在跳出`while`的时候返回一个值：
 
 ```crystal
 def foo
