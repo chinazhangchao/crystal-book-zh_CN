@@ -1,6 +1,6 @@
 # unless
 
-An `unless` evaluates the then branch if its condition is *falsey*, and evaluates the `else branch`, if there’s any, otherwise. That is, it behaves in the opposite way of an `if`:
+与`if`相反，`unless` 当条件为 *假* 的时候求值then分支，分则求值else分支(如果有)：
 
 ```crystal
 unless some_condition
@@ -9,13 +9,13 @@ else
   else_expression
 end
 
-# The above is the same as:
+# 上式等同于:
 if some_condition
   else_expression
 else
   then_expression
 end
 
-# Can also be written as a suffix
+# 也可以后置
 close_door unless door_closed?
 ```
