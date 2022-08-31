@@ -1,8 +1,7 @@
-# Type inference
+# 类型推导
 
-Crystal's philosophy is to require as few type annotations as possible. However, some type annotations are required.
+Crystal的思想是尽量少写类型声明。但是仍有一些声明要写。
 
-Consider a class definition like this:
 
 ```crystal
 class Person
@@ -12,20 +11,20 @@ class Person
 end
 ```
 
-We can quickly see that `@age` is an integer, but we don't know what's the type of `@name`. The compiler could infer its type from all uses of the `Person` class. However, doing so has a few issues:
+我们马上就能看到 `@age` 是整数，但是我们不知道 `@name`是什么类型。编译器会尝试从 `Person` 类的所有使用来推导`@name`的类型。这会导致一些问题：
 
-* The type is not obvious for a human reading the code: she would also have to check all uses of `Person` to find this out.
-* Some compiler optimizations, like having to analyze a method just once, and incremental compilation, are nearly impossible to do.
+* 这个类型对读代码的人不友好：他也得检查 `Person`的所有用法来得到推出它。
+* 一些编译器优化，比如方法只分析一次，增量编译等，几乎不可能被做到。
 
-As a code base grows, these issues gain more relevance: understanding a project becomes harder, and compile times become unbearable.
+随着代码规模增长，这个问题会愈加显著：项目变得更难理解，编译时间原地飞升。
 
-For this reason, Crystal needs to know, in an obvious way (as obvious as to a human), the types of instance and [class](class_variables.html) variables.
+因此， Crystal需要知道成员变量和[类变量](class_variables.html)的类型。清晰的声明会让编译器舒适，也会让阅读者舒适。
 
-There are several ways to let Crystal know this.
+如下几种方法可以帮助 Crystal知道这些。
 
-## With type annotations
+## 类型标注
 
-The easiest, but probably most tedious, way is to use explicit type annotations.
+最简单，也最累的方法是显示标注类型。
 
 ```crystal
 class Person
@@ -38,21 +37,21 @@ class Person
 end
 ```
 
-## Without type annotations
+## 不写类型标注
 
-If you omit an explicit type annotation the compiler will try to infer the type of instance and class variables using a bunch of syntactic rules.
+如果你没有显式地标注类型，编译器就会尝试用它丰富的规则积累推导成员变量或类变量的类型。
 
-For a given instance/class variable, when a rule can be applied and a type can be guessed, the type is added to a set. When no more rules can be applied, the inferred type will be the [union](union_types.html) of those types. Additionally, if the compiler infers that an instance variable isn't always initialized, it will also include the [Nil](literals/nil.html) type.
+对于一个成员/类变量，当从一个规则猜出一种类型时，这个类型会被记录到集合中。等到所有的规律都应用完毕，推导的类型就会是这些类型之 [联合](union_types.html)。另外，如果编译器知道这些变量没有总是得到初始化，它就会把 [Nil](literals/nil.html)类型也加进去。
 
-The rules are many, but usually the first three are most used. There's no need to remember them all. If the compiler gives an error saying that the type of an instance variable can't be inferred you can always add an explicit type annotation.
+规则有很多，但只有前三条被经常应用，因此你没必要全记住。如果编译器报错说推不出这个变量的类型，你再添一个声明也不迟。
 
-The following rules only mention instance variables, but they apply to class variables as well. They are:
+如下的规则适用于成员变量，但也可以被应用与类变量。
 
-### 1. Assigning a literal value
+### 1. 字面量赋值
 
-When a literal is assigned to an instance variable, the literal's type is added to the set. All [literals](literals.html) have an associated type.
+当成员变量被赋以字面量时，字面量的类型被加入候选。所有的 [字面量](literals.html)都关联有一个类型。
 
-In the following example, `@name` is inferred to be `String` and `@age` to be `Int32`.
+下例中， `@name`推导为 `String`，而 `@age`推导为 `Int32`。
 
 ```crystal
 class Person
@@ -63,7 +62,7 @@ class Person
 end
 ```
 
-This rule, and every following rule, will also be applied in methods other than `initialize`. For example:
+这个规则，和下面的所有规则，也用于`initialize`之外的方法。比如：
 
 ```crystal
 class SomeObject
@@ -73,13 +72,13 @@ class SomeObject
 end
 ```
 
-In the above case, `@lucky_number` will be inferred to be `Int32 | Nil`: `Int32` because 42 was assigned to it, and `Nil` because it wasn't assigned in all of the class' initialize methods.
+上例中， `@lucky_number` 会被推导为 `Int32 | Nil`：`Int32` 是因为42被赋给它，而 `Nil`是因为他不总是在所有的初始化方法中都被赋值。
 
-### 2. Assigning the result of invoking the class method `new`
+### 2. 赋以调用某个类方法 `new`的结果
 
-When an expression like `Type.new(...)` is assigned to an instance variable, the type `Type` is added to the set.
+当成员变量被赋以一个 `Type.new(...)` 之类的表达式，对应的 `Type`被加入候选。
 
-In the following example, `@address` is inferred to be `Address`.
+下例中， `@address` 推导为 `Address`。
 
 ```crystal
 class Person
@@ -89,7 +88,7 @@ class Person
 end
 ```
 
-This also is applied to generic types. Here `@values` is inferred to be `Array(Int32)`.
+这对泛型也适用。这里 `@values` 推导为 `Array(Int32)`.
 
 ```crystal
 class Something
@@ -99,11 +98,11 @@ class Something
 end
 ```
 
-**Note**: a `new` method might be redefined by a type. In that case the inferred type will be the one returned by `new`, if it can be inferred using some of the next rules.
+**注意**：  `new`方法可能在类型中被重定义，如果这样，那么它的类型就是 `new`的返回值类型，如果返回值能凭借接下来的规则推出来。
 
-### 3. Assigning a variable that is a method argument with a type restriction
+### 3. 赋以一个在方法中有类型限制的变量
 
-In the following example `@name` is inferred to be `String` because the method argument `name` has a type restriction of type `String`, and that argument is assigned to `@name`.
+下例中`@name` 推导为 `String` ，因为 `name` 的类型被确定为 `String`，然后他又被赋给了 `@name`。
 
 ```crystal
 class Person
@@ -113,7 +112,7 @@ class Person
 end
 ```
 
-Note that the name of the method argument is not important; this works as well:
+注意这个参数的名字并不重要。这个例子也顶用：
 
 ```crystal
 class Person
@@ -123,7 +122,7 @@ class Person
 end
 ```
 
-Using the shorter syntax to assign an instance variable from a method argument has the same effect:
+这个行为有语法糖，以下的代码和上面的代码是等效的：
 
 ```crystal
 class Person
@@ -132,7 +131,7 @@ class Person
 end
 ```
 
-Also note that the compiler doesn't check whether a method argument is reassigned a different value:
+同时注意，编译器不会检查方法的参数是否被赋予了别的值：
 
 ```crystal
 class Person
@@ -143,11 +142,11 @@ class Person
 end
 ```
 
-In the above case, the compiler will still infer `@name` to be `String`, and later will give a compile time error, when fully typing that method, saying that `Int32` can't be assigned to a variable of type `String`. Use an explicit type annotation if `@name` isn't supposed to be a `String`.
+这个例子中，编译器仍然会认为 `@name` 是 `String`，然后报编译错误，说 `Int32` 不能被赋给类型为 `String`的变量。如果 `@name`不应该是`String`，你应当标注出来。
 
-### 4. Assigning the result of a class method that has a return type annotation
+### 4. 赋以返回值有标注的类方法
 
-In the following example, `@address` is inferred to be `Address`, because the class method `Address.unknown` has a return type annotation of `Address`.
+下例中， `@address` 推导为 `Address`，因为类方法 `Address.unknown`的返回值被标为 `Address`。
 
 ```crystal
 class Person
@@ -166,7 +165,7 @@ class Address
 end
 ```
 
-In fact, the above code doesn't need the return type annotation in `self.unknown`. The reason is that the compiler will also look at a class method's body and if it can apply one of the previous rules (it's a `new` method, or it's a literal, etc.) it will infer the type from that expression. So, the above can be simply written like this:
+实际上， `self.unknown`用不着标注返回值类型，因为编译器会分析这个类方法。如果它能应用之前的规律(像是 `new`方法或是字面量的规律)，他就能把类方法的返回值推出来。所以，我们可以这么简写：
 
 ```crystal
 class Person
@@ -176,7 +175,7 @@ class Person
 end
 
 class Address
-  # No need for a return type annotation here
+  # 这里不用标注返回值:
   def self.unknown
     new("unknown")
   end
@@ -186,11 +185,11 @@ class Address
 end
 ```
 
-This extra rule is very convenient because it's very common to have "constructor-like" class methods in addition to `new`.
+这个规律非常方便，因为`new`之外的“类似于构造函数”的类方法非常常见。
 
-### 5. Assigning a variable that is a method argument with a default value
+### 5.赋以方法参数中的默认值
 
-In the following example, because the default value of `name` is a string literal, and it's later assigned to `@name`, `String` will be added to the set of inferred types.
+下例中， 因为 `name` 的默认值是字面量，而后他被赋值给 `@name`，所以 `String`也会被加入候选。
 
 ```crystal
 class Person
@@ -200,7 +199,7 @@ class Person
 end
 ```
 
-This of course also works with the short syntax:
+同样的，这也有语法糖：
 
 ```crystal
 class Person
@@ -209,13 +208,13 @@ class Person
 end
 ```
 
-The default value can also be a `Type.new(...)` method or a class method with a return type annotation.
+同样地，默认值可以使是 `Type.new(...)` ，或是一个有返回值标注的类方法。
 
-### 6. Assigning the result of invoking a `lib` function
+### 6. 赋以 `lib`函数的返回值
 
-Because a [lib function](c_bindings/fun.html) must have explicit types, the compiler can use the return type when assigning it to an instance variable.
+因为 [C库函数](c_bindings/fun.html) 肯定有显式的类型，所以编译器可以由此推出被赋值者的类型。
 
-In the following example `@age` is inferred to be `Int32`.
+下例中`@age` 推导为 `Int32`。
 
 ```crystal
 class Person
@@ -229,11 +228,11 @@ lib LibPerson
 end
 ```
 
-### 7. Using an `out` lib expression
+### 7. 使用 `out` 库表达式
 
-Because a [lib function](c_bindings/fun.html) must have explicit types, the compiler can use the `out` argument's type, which should be a pointer type, and use the dereferenced type as a guess.
+因为 [库函数](c_bindings/fun.html) 的参数肯定有显式的类型，编译器就可以猜出 `out`参数的类型。这应该是一个指针类型，也可能是是指针解引用得到的类型。
 
-In the following example `@age` is inferred to be `Int32`.
+下例中`@age` 推导为 `Int32`.
 
 ```crystal
 class Person
@@ -247,9 +246,9 @@ lib LibPerson
 end
 ```
 
-### Other rules
+### 其他规则
 
-The compiler will try to be as smart as possible to require less explicit type annotations. For example, if assigning an `if` expression, type will be inferred from the `then` and `else` branches:
+编译器会尽它最大的智能来减少你手动标注类型的需要。比如，如果 `if`的结果被拿来赋值，类型就会是 `then`和 `else`分支返回类型的并：
 
 ```crystal
 class Person
@@ -259,9 +258,9 @@ class Person
 end
 ```
 
-Because the `if` above (well, technically a ternary operator, but it's similar to an `if`) has integer literals, `@age` is successfully inferred to be `Int32` without requiring a redundant type annotation.
+因为上面的`if`  (额，技术上叫三元运算符，不过类似于 `if`)有整数字面量， `@age`就会被成功推导为 `Int32`而不用再标注类型。
 
-Another case is `||` and `||=`:
+另外的例子是 `||` 和 `||=`：
 
 ```crystal
 class SomeObject
@@ -271,9 +270,9 @@ class SomeObject
 end
 ```
 
-In the above example `@lucky_number` will be inferred to be `Int32 | Nil`. This is very useful for lazily initialized variables.
+上例中 `@lucky_number` 推导为 `Int32 | Nil`。这对于惰性初始化的变量非常有用。
 
-Constants will also be followed, as it's pretty simple for the compiler (and a human) to do so.
+也可以用常量赋值，这对于编译器和人类都很友好。
 
 ```crystal
 class SomeObject
@@ -284,4 +283,4 @@ class SomeObject
 end
 ```
 
-Here rule 5 (argument's default value) is used, and because the constant resolves to an integer literal, `@lucky_number` is inferred to be `Int32`.
+此时应用规则 5 (参数初始值)，然后因为常量是一个整数字面量， `@lucky_number` 就推导为 `Int32`.
