@@ -54,7 +54,7 @@
        * [until](syntax_and_semantics/until.md)
        * [&&](syntax_and_semantics/and.md)
        * [||](syntax_and_semantics/or.md)
-   * [Requiring files](syntax_and_semantics/requiring_files.md)
+   * [导入文件](syntax_and_semantics/requiring_files.md)
    * [类型和方法](syntax_and_semantics/types_and_methods.md)
        * [一切都是对象](syntax_and_semantics/everything_is_an_object.md)
        * [Crystal 程序](syntax_and_semantics/the_program.md)
