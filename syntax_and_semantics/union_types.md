@@ -1,6 +1,6 @@
-# Union types
+# 联合类型
 
-The type of a variable or expression can consist of multiple types. This is called a union type. For example, when assigning to a same variable inside different [if](if.html) branches:
+变量和表达式的类型可以有多个类型组成，这被称为联合类型。例如，当在 [if](if.html)的不同分支中赋值同一个变量时：
 
 ```crystal
 if 1 + 2 == 3
@@ -12,46 +12,46 @@ end
 a # : Int32 | String
 ```
 
-At the end of the if, `a` will have the `Int32 | String` type, read "the union of Int32 and String". This union type is created automatically by the compiler. At runtime, `a` will of course be of one type only. This can be seen by invoking the `class` method:
+在if的结尾， `a` 会有类型 `Int32 | String`，读作 " Int32 和 String的联合类型"。这个联合类型由编译器自动构建。在运行时， `a` 当然只会有一个类型。这可以由调用 `class`方法看出：
 
 ```crystal
-# The runtime type
+# 运行时类型
 a.class # => Int32
 ```
 
-The compile-time type can be seen by using [typeof](typeof.html):
+编译时类型可以由 [typeof](typeof.html)看出：
 
 ```crystal
-# The compile-time type
+# 编译时类型
 typeof(a) # => Int32 | String
 ```
 
-A union can consist of an arbitrary large number of types. When invoking a method on an expression whose type is a union type, all types in the union must respond to the method, otherwise a compile-time error is given. The type of the method call is the union type of the return types of those methods.
+一个联合类型可以由任意多的类型组成。当调用联合类型的某个方法时，所有的类型都必须响应这个方法，否则会产生编译错误。这个方法调用返回值的类型是所有可能的返回值类型的联合。
 
 ```crystal
-# to_s is defined for Int32 and String, it returns String
+# to_s 在 Int32 和 String 都有定义，它返回 String
 a.to_s # => String
 
-a + 1 # Error, because String#+(Int32) isn't defined
+a + 1 # 错误，因为 String#+(Int32) 没有定义
 ```
 
-If necessary a variable can be defined as a union type at compile time
+如果需要，一个变量可以在编译时设为联合类型。
 
 ```crystal
-# set the compile-time type
+# 设置编译时类型
 a = 0.as(Int32|Nil|String)
 typeof(a) # => Int32 | Nil | String
 ```
 
-## Union types rules
+## 联合类型规则
 
-In the general case, when two types `T1` and `T2` are combined, the result is a union `T1 | T2`. However, there are a few cases where the resulting type is a different type.
+一般来说，但两个类型 `T1`和 `T2`结合时，得到的类型是 `T1 | T2`。然而，在少数情况返回值可以是其他的类型。
 
-### Union of classes and structs under the same hierarchy
+### 同一级的类和结构体之联合
 
-If `T1` and `T2` are under the same hierarchy, and their nearest common ancestor `Parent` is not `Reference`, `Struct`, `Int`, `Float` nor `Value`, the resulting type is `Parent+`. This is called a virtual type, which basically means the compiler will now see the type as being `Parent` or any of its subtypes.
+如果 `T1` 和 `T2`在同一个等级，并且它们最近的共同祖先 `Parent`不是 `Reference`、 `Struct`、 `Int`、 `Float`或 `Value`，则返回类型是 `Parent+`。这称作虚类型，意思是编译器不会把它看做 `Parent`，或是任何的子类型。
 
-For example:
+例如：
 
 ```crystal
 class Foo
@@ -66,18 +66,18 @@ end
 bar = Bar.new
 baz = Baz.new
 
-# Here foo's type will be Bar | Baz,
-# but because both Bar and Baz inherit from Foo,
-# the resulting type is Foo+
+# 这里 foo的类型是 Bar | Baz,
+# 但是由于Bar 和 Baz 都继承 Foo,
+# 返回类型是 Foo+
 foo = rand < 0.5 ? bar : baz
 typeof(foo) # => Foo+
 ```
 
-### Union of tuples of the same size
+### 同样大小的元组之联合
 
-The union of two tuples of the same size results in a tuple type that has the union of the types in each position.
+同样大小的元组的联合，会得到一个新元组，每个位置的类型是原先对应位置的各类型之并。
 
-For example:
+例如：
 
 ```crystal
 t1 = {1, "hi"}   # Tuple(Int32, String)
@@ -87,11 +87,11 @@ t3 = rand < 0.5 ? t1 : t2
 typeof(t3) # Tuple(Int32 | Bool, String | Nil)
 ```
 
-### Union of named tuples with the same keys
+### 相同键名的命名元组之联合
 
-The union of two named tuples with the same keys (regardless of their order) results in a named tuple type that has the union of the types in each key. The order of the keys will be the ones from the tuple on the left hand side.
+不管键的排列顺序如何，相同键名的命名元组之联合会得到一个新元组，每个键值的类型是原先对应键值的各类型之并。键的顺序如同最表达式左边的那个元组。
 
-For example:
+例如：
 
 ```crystal
 t1 = {x: 1, y: "hi"}   # Tuple(x: Int32, y: String)
