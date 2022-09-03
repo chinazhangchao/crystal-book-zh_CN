@@ -64,7 +64,7 @@
            * [类型推导](syntax_and_semantics/type_inference.md)
            * [联合类型](syntax_and_semantics/union_types.md)
            * [重载](syntax_and_semantics/overloading.md)
-           * [命名参数的默认值](syntax_and_semantics/default_and_named_arguments.md)
+           * [命名参数和默认值](syntax_and_semantics/default_and_named_arguments.md)
            * [Splats and tuples](syntax_and_semantics/splats_and_tuples.md)
            * [类型限制](syntax_and_semantics/type_restrictions.md)
            * [返回类型](syntax_and_semantics/return_types.md)
