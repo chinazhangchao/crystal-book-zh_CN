@@ -1,6 +1,6 @@
-# Splats and tuples
+# 元组展开
 
-A method can receive a variable number of arguments by using a *splat* (`*`), which can appear only once and in any position:
+一个方法可以通过*星号参数* (`*`)来接收不定数量的参数。星号参数可以出现在任何位置，但只能出现一次：
 
 ```crystal
 def sum(*elements)
@@ -15,17 +15,17 @@ sum 1, 2, 3    #=> 6
 sum 1, 2, 3, 4.5 #=> 10.5
 ```
 
-The passed arguments become a [Tuple](http://crystal-lang.org/api/Tuple.html) in the method's body:
+这些传递的参数在消息内会形成一个[元组](http://crystal-lang.org/api/Tuple.html)：
 
 ```crystal
-# elements is Tuple(Int32, Int32, Int32)
+# 元组(Int32, Int32, Int32)中的元素
 sum 1, 2, 3
 
-# elements is Tuple(Int32, Int32, Int32, Float64)
+# 元组(Int32, Int32, Int32, Float64)中的元素
 sum 1, 2, 3, 4.5
 ```
 
-Arguments past the splat argument can only be passed as named arguments:
+星号后面只能接命名参数：
 
 ```crystal
 def sum(*elements, initial = 0)
@@ -40,7 +40,7 @@ sum 1, 2, 3 # => 6
 sum 1, 2, 3, initial: 10 # => 16
 ```
 
-Arguments past the splat method without a default value are required named arguments:
+星号后面的参数如果没有默认值，那就只能用名称指定：
 
 ```crystal
 def sum(*elements, initial)
@@ -51,11 +51,11 @@ def sum(*elements, initial)
   total
 end
 
-sum 1, 2, 3 # Error, missing argument: initial
+sum 1, 2, 3 # 错误，缺少参数: initial
 sum 1, 2, 3, initial: 10 # => 16
 ```
 
-Two methods with different required named arguments overload between each other:
+两个需要不同名称的命名参数是不同的,只是重载在一起而已：
 
 ```crystal
 def foo(*elements, x)
@@ -70,20 +70,20 @@ foo x: "something" # => 1
 foo y: "something" # => 2
 ```
 
-The splat argument can also be left unnamed, with the meaning "after this, named arguments follow":
+星号参数也可以不写名字，这意味着“我之后只能是命名参数”：
 
 ```crystal
 def foo(x, y, *, z)
 end
 
-foo 1, 2, 3    # Error, wrong number of arguments (given 3, expected 2)
-foo 1, 2       # Error, missing argument: z
+foo 1, 2, 3    # 错误, 参数数目不匹配 (给出 3, 期待 2)
+foo 1, 2       # 错误, 缺少参数: z
 foo 1, 2, z: 3 # OK
 ```
 
-## Splatting a tuple
+## 展开元祖
 
-A `Tuple` can be splat into a method call by using `*`:
+`Tuple` 可以用`*`在方法中展开：
 
 ```crystal
 def foo(x, y)
@@ -94,13 +94,13 @@ tuple = {1, 2}
 foo *tuple # => 3
 ```
 
-## Double splats and named tuples
+## 双星号和命名元组
 
-A double splat (`**`) captures named arguments that were not matched by other arguments. The type of the argument is a `NamedTuple`:
+双星号(`**`) 接受没有被其他名称匹配的命名参数。他自己的类型是 `NamedTuple`：
 
 ```crystal
 def foo(x, **other)
-  # Return the captured named arguments as a NamedTuple
+  # 以 NamedTuple 的形式返回其他参数
   other
 end
 
@@ -108,9 +108,9 @@ foo 1, y: 2, z: 3    # => {y: 2, z: 3}
 foo y: 2, x: 1, z: 3 # => {y: 2, z: 3}
 ```
 
-## Double splatting a named tuple
+## 命名元组的展开
 
-A `NamedTuple` can be splat into a method call by using `**`:
+`NamedTuple` 可以通过 `**`展开，送进一个方法：
 
 ```crystal
 def foo(x, y)

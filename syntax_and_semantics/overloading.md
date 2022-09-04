@@ -1,6 +1,6 @@
-# Overloading
+# 重载
 
-We can define a `become_older` method that accepts a number indicating the years to grow:
+我们可以定义一个 `become_older` 方法，它接受一个数字，表示成长的年龄：
 
 ```crystal
 class Person
@@ -28,38 +28,37 @@ john.become_older 5
 john.age #=> 6
 ```
 
-That is, you can have different methods with the same name and different number of arguments and they will be considered as separate methods. This is called *method overloading*.
+如果你定义名称相同，参数个数不同的多种方法，他们那会被认为是不同的方法。这被称为*方法重载*。
 
-Methods overload by several criteria:
+方法重载有多个指标：
 
-* The number of arguments
-* The type restrictions applied to arguments
-* The names of required named arguments
-* Whether the method accepts a [block](blocks_and_procs.html) or not
+* 参数的个数
+* 加给参数的类型限制
+* 参数需要的名称
+* 方法是否接收 [块](blocks_and_procs.html)
 
-For example, we can define four different `become_older` methods:
+例如，我们可以定义四种不同的 `become_older` 方法：
 
 ```crystal
 class Person
   @age = 0
 
-  # Increases age by one
+  # 年龄增长一岁
   def become_older
     @age += 1
   end
 
-  # Increases age by the given number of years
+  # 按指定年龄增长
   def become_older(years : Int32)
     @age += years
   end
 
-  # Increases age by the given number of years, as a String
+  # 按字符串指定的年龄增长
   def become_older(years : String)
     @age += years.to_i
   end
 
-  # Yields the current age of this person and increases
-  # its age by the value returned by the block
+  # 产出(yield)这个人当前的年龄,并且按块的返回值增加它
   def become_older
     @age += yield @age
   end
@@ -82,7 +81,7 @@ end
 person.age #=> 28
 ```
 
-Note that in the case of the method that yields, the compiler figured this out because there's a `yield` expression. To make this more explicit, you can add a dummy `&block` argument at the end:
+注意在那个有yield的方法的情况中，编译器发现方法里有一个`yield`表达式，所以知道它接受一个块。如果要明显地指出，你可以在参数列表末尾加入一个`&block` 参数。
 
 ```crystal
 class Person
@@ -94,22 +93,20 @@ class Person
 end
 ```
 
-In generated documentation the dummy `&block` method will always appear, regardless of you writing it or not.
+在产生的文档中，这个 `&block` 方法将总是写出，不论你有没有显式地写出它。
 
-Given the same number of arguments, the compiler will try to sort them by leaving the less restrictive ones to the end:
+参数个数相同时，编译器会尝试找到更*精确匹配*的方法定义，然后调用它。
 
 ```crystal
 class Person
   @age = 0
 
-  # First, this method is defined
+  # 首先这个方法被定义了
   def become_older(age)
     @age += age
   end
 
-  # Since "String" is more restrictive than no restriction
-  # at all, the compiler puts this method before the previous
-  # one when considering which overload matches.
+  # 因为 "String" 比毫无限制要严格，编译器进行重载决议时，会让他优先于之前的那个。
   def become_older(age : String)
     @age += age.to_i
   end
@@ -117,11 +114,11 @@ end
 
 person = Person.new "John"
 
-# Invokes the first definition
+# 调用第一个定义
 person.become_older 20
 
-# Invokes the second definition
+# 调用第二个定义
 person.become_older "12"
 ```
 
-However, the compiler cannot always figure out the order because there isn't always a total ordering, so it's always better to put less restrictive methods at the end.
+然而这个比较不是全序的(译注：如果有多个匹配，它们在不同的方面做了限制，编译器将犯难最终要用哪一个)。所以最好总是把最宽泛的方法放在最后面。

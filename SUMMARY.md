@@ -65,7 +65,7 @@
            * [联合类型](syntax_and_semantics/union_types.md)
            * [重载](syntax_and_semantics/overloading.md)
            * [命名参数和默认值](syntax_and_semantics/default_and_named_arguments.md)
-           * [Splats and tuples](syntax_and_semantics/splats_and_tuples.md)
+           * [不定数目参数和元组展开](syntax_and_semantics/splats_and_tuples.md)
            * [类型限制](syntax_and_semantics/type_restrictions.md)
            * [返回类型](syntax_and_semantics/return_types.md)
            * [方法形参](syntax_and_semantics/default_values_named_arguments_splats_tuples_and_overloading.md)
