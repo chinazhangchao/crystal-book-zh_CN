@@ -1,18 +1,18 @@
-# Operators
+# 运算符
 
-Operators like `+` and `-` are regular method calls. For example:
+ `+` 和 `-` 这样的运算符也是方法调用。例如：
 
 ```crystal
 a + b
 ```
 
-is the same as:
+等同于
 
 ```crystal
 a.+(b)
 ```
 
-You can define an operator for a type like this:
+你可以如此定义一个运算符：
 
 ```crystal
 struct Vector2
@@ -31,18 +31,18 @@ v2 = Vector2.new(3, 4)
 v1 + v2               #=> Vector2(@x=4, @y=6)
 ```
 
-Next follows the full list of operators with their usual meaning.
+下面展示了所有的运算符及它们的意义。
 
-## Unary operators
+## 单目运算符
 
 ```crystal
-+   # positive
--   # negative
-!   # not
-~   # bitwise complement
++   # 正号
+-   # 负号
+!   # 逻辑非
+~   # 按位取反
 ```
 
-These are defined without arguments. For example
+它们的定义不带参数。例如：
 
 ```crystal
 struct Vector2
@@ -55,39 +55,39 @@ v1 = Vector2.new(1, 2)
 -v1                    #=> Vector2(@x=-1, @y=-2)
 ```
 
-**Note:** `!` (not) cannot be defined as a method (its meaning can't be changed).
+**注意:** `!` (非) 不能被定义为方法，即它的意义不能被改变。
 
-## Binary operators
+## 双目运算符
 
-* `+` – addition
-* `-` – subtraction
-* `*` – multiplication
-* `/` – division
-* `%` – modulo
-* `&` – bitwise and
-* `|` – bitwise or
-* `^` – bitwise xor
-* `**` – exponentiation
-* `<<` – shift left, append
-* `>>` – shift right
-* `==` – equals
-* `!=` – not equals
-* `<` – less
-* `<=` – less or equal
-* `>` – greater
-* `>=` – greater or equal
-* `<=>` – comparison
-* `===` – [case equality](case.html)
+* `+` – 加法
+* `-` – 减法
+* `*` – 乘法
+* `/` – 除法
+* `%` – 取模
+* `&` – 位与
+* `|` – 位或
+* `^` – 位异或
+* `**` – 指数
+* `<<` – 左移，添加
+* `>>` – 右移
+* `==` – 等于
+* `!=` – 不等于
+* `<` – 小于
+* `<=` – 小于等于
+* `>` – 大于
+* `>=` – 大于等于
+* `<=>` – 三相比较
+* `===` – [匹配](case.html)
 
-## Indexing
+## 索引
 
 ```crystal
-[]  # array index (raises on out of bounds)
-[]? # array index (nil on out of bounds)
-[]= # array index assignment
+[]  # 数组/散列索引 (越界时抛出异常)
+[]? # 数组/散列索引 (越界时返回nil)
+[]= # 数组/散列索引赋值
 ```
 
-For example:
+例如：
 
 ```crystal
 class MyArray
@@ -106,16 +106,15 @@ end
 
 array = MyArray.new
 
-array[1]       # invokes the first method
-array[1, 2, 3] # invokes the second method
-array[1] = 2   # invokes the third method
+array[1]       # 调用第一个方法
+array[1, 2, 3] # 调用第二个方法
+array[1] = 2   # 调用第三个方法
 
-array.[](1)       # invokes the first method
-array.[](1, 2, 3) # invokes the second method
-array.[]=(1, 2)   # invokes the third method
+array.[](1)       # 调用第一个方法
+array.[](1, 2, 3) # 调用第二个方法
+array.[]=(1, 2)   # 调用第三个方法
 ```
 
-## Meaning
+## 意义
 
-One can assign any meaning to the operators, but the convention is to follow the above ones to avoid cryptic code, or code that behaves in an unexpected way.
-
+你可以为运算符指定任何意义。但是为了代码可读性或者可解释性，你应当遵守上述约定。
