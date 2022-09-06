@@ -1,6 +1,6 @@
-# Default values
+# 默认值
 
-A method can specify default values for the last arguments:
+一个方法可以指定后面一些参数的默认值：
 
 ```crystal
 class Person
@@ -19,19 +19,19 @@ john.become_older 2
 john.age #=> 3
 ```
 
-# Named arguments
+# 命名参数
 
-All arguments can also be specified, in addition to their position, by their name. For example:
+所有的参数除了使用位置确定之外，还可以通过名称来确定。例如：
 
 ```crystal
 john.become_older by: 5
 ```
 
-When there are many arguments, the order of the names in the invocation don't matter, as long as all required arguments are covered:
+当有多个参数时，只要所有需要的参数都指定了，那么指定名称的顺序就没有影响。
 
 ```crystal
 def some_method(x, y = 1, z = 2, w = 3)
-  # do something...
+  # 做一些事情
 end
 
 some_method 10                   # x: 10, y: 1, z: 2, w: 3
@@ -39,7 +39,7 @@ some_method 10, z: 10            # x: 10, y: 1, z: 10, w: 3
 some_method 10, w: 1, y: 2, z: 3 # x: 10, y: 2, z: 3, w: 1
 some_method y: 10, x: 20         # x: 20, y: 10, z: 2, w: 3
 
-some_method y: 10                # Error, missing argument: x
+some_method y: 10                # 错误: 缺少参数 x
 ```
 
-When a method specifies a splat (explained in the next section), named arguments can't be used. The reason is that understanding how arguments are matched becomes very difficult; positional arguments are easier to reason about in this case.
+当用元组概括不定数量参数时，不能使用命名参数。因为这时难以确定哪个输入匹配哪个位置。此时位置参数相对易于理解。

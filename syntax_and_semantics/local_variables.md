@@ -1,22 +1,22 @@
-# Local variables
+# 局部变量
 
-Local variables start with lowercase letters. They are declared when you first assign them a value.
+局部变量以小写字母开头。它们当你第一次赋值一个变量时被声明。
 
 ```crystal
 name = "Crystal"
 age = 1
 ```
 
-Their type is inferred from their usage, not only from their initializer. In general, they are just value holders associated with the type that the programmer expects them to have according to their location and usage on the program.
+局部变量的类型由它们的用法推导而来，而不只是由于初始化它的表达式。 一般来说，它们只是存放值的位置，而值的类型根据位置和用法，可以适当地变化。
 
-For example, reassigning a variable with a different expression makes it have that expression’s type:
+比如，对一个变量重新赋值可以让他有新表达式的类型：
 
 ```crystal
 flower = "Tulip"
-# At this point 'flower' is a String
+# 此时 'flower' 是 String
 
 flower = 1
-# At this point 'flower' is an Int32
+# 此时 'flower' 是 Int32
 ```
 
-Underscores are allowed at the beginning of a variable name, but these names are reserved for the compiler, so their use is not recommended (and it also makes the code uglier to read).
+下划线开头的名字是合法的，但是它们被留给编译器做其他用途，因此不推荐使用(况且它们把代码变的更丑)。

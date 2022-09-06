@@ -1,56 +1,56 @@
-# if var
+# if 变量
 
-If a variable is the condition of an `if`, inside the `then` branch the variable will be considered as not having the `Nil` type:
+如果一个变量被用作 `if` 的条件，那么在 `then`分支内他会被认为不可能是 `Nil`类型：
 
 ```crystal
 a = some_condition ? nil : 3
 # a is Int32 or Nil
 
 if a
-  # Since the only way to get here is if a is truthy,
-  # a can't be nil. So here a is Int32.
+  # 既然我们只能通过 a 为真一种方式到达这里,
+  # a 就不能是. 所以在此， a 是 Int32.
   a.abs
 end
 ```
 
-This also applies when a variable is assigned in an `if`'s condition:
+同样的思维用于当一个值在if表达式中被赋值时：
 
 ```crystal
 if a = some_expression
-  # here a is not nil
+  # 此处 a 不会是 nil
 end
 ```
 
-This logic also applies if there are ands (`&&`) in the condition:
+逻辑与运算符(`&&`)也适用此规律： 
 
 ```crystal
 if a && b
-  # here both a and b are guaranteed not to be Nil
+  # 这里 a 和 b 保证都不是 Nil
 end
 ```
 
-Here, the right-hand side of the `&&` expression is also guaranteed to have `a` as not `Nil`.
+这里， `&&` 表达式右边的 `b` 也保证不是 `Nil`。
 
-Of course, reassigning a variable inside the `then` branch makes that variable have a new type based on the expression assigned.
+当然，在 `then` 分支重赋值变量会导致变量有新的类型。
 
-## Limitations
+## 限制
 
-The above logic **doesn’t** work with instance variables, class variables and variables bound in a closure. The value of these kinds of variables could potentially be affected by another fiber after the condition was checked, rendering it `nil`.
+这个逻辑 **不适用于** 成员变量，类变量和其他在闭包中绑定的变量。这些变量的值有可能在条件判断之后又被另外的纤程修改，导致它变成 `nil`。
 
 ```crystal
 if @a
-  # here `@a` can be nil
+  # 此处 `@a` 可以是 nil
 end
 
 if @@a
-  # here `@@a` can be nil
+  # 此处 `@@a` 可以是 nil
 end
 
 a = nil
-closure = ->(){ foo = "foo" }
+closure = ->(){ foo = "foo" } # 这个闭包绑定了前面所有的变量，包括 a
 
 if a
-  # here `a` can be nil
+  # 此处 `a` 可以是 nil
 end
 ```
 

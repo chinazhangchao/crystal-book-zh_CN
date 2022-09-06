@@ -1,18 +1,18 @@
 # if var.is_a?(...)
 
-If an `if`'s condition is an `is_a?` test, the type of a variable is guaranteed to be restricted by that type in the `then` branch.
+如果 `if`的条件是 `is_a?` 测试，那`then`分支中该表达式就确定是这个类型。 
 
 ```crystal
 if a.is_a?(String)
-  # here a is a String
+  # 此处 a 是 String
 end
 
 if b.is_a?(Number)
-  # here b is a Number
+  # 此处 b 是 Number
 end
 ```
 
-Additionally, in the `else` branch the type of the variable is guaranteed to not be restricted by that type:
+另外，在 `else` 分支中该变量就确定不是这个类型：
 
 ```crystal
 a = some_condition ? 1 : "hello"
@@ -25,30 +25,31 @@ else
 end
 ```
 
-Note that you can use any type as an `is_a?` test, like abstract classes and modules.
+注意，你可以用 `is_a?`测试任意的类型，比如抽象类和模块。
 
-The above also works if there are ands (`&&`) in the condition:
+上述规则也适用于条件中的与运算(`&&`)：
 
 ```crystal
 if a.is_a?(String) && b.is_a?(Number)
-  # here a is a String and b is a Number
+  # 此处 a 是 String , b 是 Number
 end
 ```
+## 限制
 
-The above **doesn’t** work with instance variables or class variables. To work with these, first assign them to a variable:
+上述规则 **不适用于** 成员变量或类变量。为了在这些地方使用它，首先把它赋值给一个局部变量：
 
 ```crystal
 if @a.is_a?(String)
-  # here @a is not guaranteed to be a String
+  # 此处 @a 不能保证是 String
 end
 
 a = @a
 if a.is_a?(String)
-  # here a is guaranteed to be a String
+  # 此处 a is 保证是 String
 end
 
 # A bit shorter:
 if (a = @a).is_a?(String)
-  # here a is guaranteed to be a String
+  # 此处 a is 保证是 String
 end
 ```

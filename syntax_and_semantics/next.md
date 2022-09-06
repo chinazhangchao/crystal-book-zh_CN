@@ -1,6 +1,6 @@
 # next
 
-You can use `next` to try to execute the next iteration of a `while` loop. After executing `next`, the `while`'s condition is checked and, if *truthy*, the body will be executed.
+可以用 `next`直接跳到执行`while`的下一个循环。在 `next`执行后， `while`会检查条件，如果是 *真*的，它就接着执行循环体。
 
 ```crystal
 a = 1
@@ -11,5 +11,5 @@ while a < 5
   end
   puts a
 end
-# The above prints the numbers 2, 4 and 5
+# 上面的结构打印数 2, 4 和 5
 ```

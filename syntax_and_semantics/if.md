@@ -1,7 +1,6 @@
 # if
 
-An `if` evaluates the given branch if its condition is *truthy*. Otherwise, it
-evaluates the `else` branch if present.
+`if` 当条件是*真的* 时，求值给定的分支。否则，就求值`else`分支(如果有)。
 
 ```crystal
 a = 1
@@ -19,23 +18,23 @@ end
 b #=> 20
 ```
 
-To write a chain of if-else-if you use `elsif`:
+`elsif`表示 if-else-if 长链：
 
 ```crystal
-if some_condition
-  do_something
-elsif some_other_condition
-  do_something_else
+if 某个条件
+  做某事
+elsif 另一个条件
+  做另一些事
 else
-  do_that
+  其他事
 end
 ```
 
-After an `if`, a variable’s type depends on the type of the expressions used in both branches.
+ `if`之后，一个表达式的类型是他在所有分支中出现的类型之联合。
 
 ```crystal
 a = 1
-if some_condition
+if 某个条件
   a = "hello"
 else
   a = true
@@ -43,31 +42,31 @@ end
 # a : String | Bool
 
 b = 1
-if some_condition
+if 某个条件
   b = "hello"
 end
 # b : Int32 | String
 
-if some_condition
+if 某个条件
   c = 1
 else
   c = "hello"
 end
 # c : Int32 | String
 
-if some_condition
+if 某个条件
   d = 1
 end
 # d : Int32 | Nil
 ```
 
-Note that if a variable is declared inside one of the branches but not in the other one, at the end of the `if` it will also contain the `Nil` type.
+注意如果表达式在一个分支中声明，而在另一个分支中没有声明，那么 `if` 之后他会包含 `Nil`类型。
 
-Inside an `if`'s branch the type of a variable is the one it got assigned in that branch, or the one that it had before the branch if it was not reassigned:
+`if`外已有的变量如果在`if`的一个分支中被赋予其他的类型的值，那么他在`if`后就可能是新的类型：
 
 ```crystal
 a = 1
-if some_condition
+if 某个条件
   a = "hello"
   # a : String
   a.size
@@ -75,12 +74,12 @@ end
 # a : String | Int32
 ```
 
-That is, a variable’s type is the type of the last expression(s) assigned to it.
+即，表达式的类型是最后一次赋值的变量的类型。
 
-If one of the branches never reaches past the end of an `if`, like in the case of a `return`, `next`, `break` or `raise`, that type is not considered at the end of the `if`:
+如果一个分支包含 `return`， `next`， `break` 或 `raise`， 即它绝对不会到达 `if`的结尾，该分支中的赋值就不会影响 `if`后面的变量：
 
 ```crystal
-if some_condition
+if 某个条件
   e = 1
 else
   e = "hello"

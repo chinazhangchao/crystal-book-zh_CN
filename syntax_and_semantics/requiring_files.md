@@ -1,24 +1,24 @@
-# Requiring files
+# 导入文件
 
-Writing a program in a single file is OK for little snippets and small benchmark code. Big programs are better maintained and understood when split across different files.
+对于小的片段或是测试程序，把所有程序写到一个文件里尚可以接受。然而，大程序更适合分到多个文件里，以维持清晰的结构，增强可维护性。
 
-To make the compiler process other files you use `require "..."`. It accepts a single argument, a string literal, and it can come in many flavors.
+要让编译器处理其他文档，你可以用 `require "..."`。 它接受一个单独的字符串字面量。`require "..."`有很多功能，下面将一一说明。
 
-Once a file is required, the compiler remembers its absolute path and later `require`s of that same file will be ignored.
+一旦文件被包含，编译器就会记住文件的绝对路径，对其重复的`require`会被忽略。
 
 ## require "filename"
 
-This looks up "filename" in the require path.
+查找包含目录里面的文件 "filename" 。
 
-By default the require path is the location of the standard library that comes with the compiler, and the "lib" directory relative to the current working directory (given by `pwd` in a Unix shell). These are the only places that are looked up.
+默认的包含目录是编译器指定的标准库目录，以及当前目录下的"lib" 子目录(由unix shell 的`pwd` 指定)。默认情况下只会查找这两个地方。
 
-The lookup goes like this:
+查找遵循如下规则：
 
-* If a file named "filename.cr" is found in the require path, it is required.
-* If a directory named "filename" is found and it contains a file named "filename.cr" directly underneath it, it is required.
-* Otherwise a compile-time error is issued.
+* 如果包含目录中有文件叫 "filename.cr"， 那就导入它。
+* 如果有目录叫 "filename" ，并且里面有文件 "filename.cr"直属于它，那就导入这个文件。
+* 否则产生编译错误。
 
-The second rule is very convenient because of the typical directory structure of a project:
+第二个规则非常方便，因为项目的典型目录结构是这样的：
 
 ```
 - project
@@ -33,37 +33,37 @@ The second rule is very convenient because of the typical directory structure of
     - project_spec.cr
 ```
 
-For example, if you put `require "foo"` in `project.cr` and run `crystal src/project.cr` in the project's root directory, it will find `foo` in `lib/foo/foo.cr`.
+比如，如果你在`project.cr`中写`require "foo"`以导入foo，然后在项目根目录中运行  `crystal src/project.cr`，它就在 `lib/foo/foo.cr`中找到 `foo`。
 
-If you run the compiler from somewhere else, say the `src` folder, `lib` will not be in the path and `require "foo"` can't be resolved.
+如果你从其他地方运行编译器,比如说 `src`文件夹，那么 `lib`就不在路径中， `require "foo"`也不会被找到。
 
 ## require "./filename"
 
-This looks up "filename" relative to the file containing the require expression.
+这会从文档的当前位置以相对路径查找 "filename"。
 
-The lookup goes like this:
+查找遵循如下规律：
 
-* If a file named "filename.cr" is found relative to the current file, it is required.
-* If a directory named "filename" is found and it contains a file named "filename.cr" directly underneath it, it is required.
-* Otherwise a compile-time error is issued.
+* 如果有文件 "filename.cr" 在当前文档中，那就包含它。
+* 如果有目录 "filename" ，而且里面有文件 "filename.cr"直属于它，那就导入这个文件。
+* 否则产生编译错误。
 
-This relative is mostly used inside a project to refer to other files inside it. It is also used to refer to code from [specs](../guides/testing.md):
+这个关系往往用于引用项目内的其他文件。它也用于从[specs](../guides/testing.md)中引用项目的文件：
 
 ```crystal
-# in spec/project_spec.cr
+# 在 spec/project_spec.cr
 require "../src/project"
 ```
 
-## Other forms
+## 其他形式
 
-In both cases you can use nested names and they will be looked up in nested directories:
+这两种形式都支持嵌套名称，这会导到对应的嵌套文件或目录里面：
 
-* `require "foo/bar/baz"` will lookup "foo/bar/baz.cr" or "foo/bar/baz/baz.cr" in the require path.
-* `require "./foo/bar/baz"` will lookup "foo/bar/baz.cr" or "foo/bar/baz/baz.cr" relative to the current file.
+* `require "foo/bar/baz"` 会在包含目录中查找 "foo/bar/baz.cr" 或 "foo/bar/baz/baz.cr" 
+* `require "./foo/bar/baz"` 会从当前目录以相对路径查找 "foo/bar/baz.cr" 或 "foo/bar/baz/baz.cr"
 
-You can also use "../" to access parent directories relative to the current file, so `require "../../foo/bar"` works as well.
+你也可以用 "../" 去访问当前文件的上级目录，所以 `require "../../foo/bar"`也可以使用。
 
-In all of these cases you can use the special `*` and `**` suffixes:
+这两种形式都支持 `*` 和 `**` 后缀：
 
-* `require "foo/*"` will require all ".cr" files below the "foo" directory, but not below directories inside "foo".
-* `require "foo/**"` will require all ".cr" files below the "foo" directory, and below directories inside "foo", recursively.
+* `require "foo/*"` 会导入"foo"文件夹中所有的 ".cr"文件，但到这层为止，不会递归地包含底下的目录。
+* `require "foo/**"` 会导入"foo"文件夹中所有的 ".cr"文件，同时会递归地包含底下的目录。

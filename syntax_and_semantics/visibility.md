@@ -1,6 +1,6 @@
-# Visibility
+# 可见性
 
-Methods are public by default: the compiler will always let you invoke them, even if there is no `public` keyword.
+方法默认是公开的：编译期总会让你调用它即使你没加 `public`关键字。
 
 Methods can be marked as `private` or `protected`.
 

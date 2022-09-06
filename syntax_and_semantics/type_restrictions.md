@@ -1,6 +1,6 @@
-# Type restrictions
+# 类型限制
 
-Type restrictions are type annotations put to method arguments to restrict the types accepted by that method.
+类型限制是施加于方法参数上的类型声明，用于限制方法接受的参数。
 
 ```crystal
 def add(x : Number, y : Number)
@@ -10,11 +10,11 @@ end
 # Ok
 add 1, 2 # Ok
 
-# Error: no overload matches 'add' with types Bool, Bool
+# 错误: 'add' 没有重载匹配类型 Bool, Bool
 add true, false
 ```
 
-Note that if we had defined `add` without type restrictions, we would also have gotten a compile time error:
+注意如果我们定义 `add`时没有增加类型约束，最终还是会得到编译错误：
 
 ```crystal
 def add(x, y)
@@ -24,33 +24,33 @@ end
 add true, false
 ```
 
-The above code gives this compile error:
+他会产生如下的错误：
 
 ```
-Error in foo.cr:6: instantiating 'add(Bool, Bool)'
+错误:  foo.cr:6: 实例化 'add(Bool, Bool)' 时:
 
 add true, false
 ^~~
 
-in foo.cr:2: undefined method '+' for Bool
+foo.cr:2: Bool 没有定义方法 '+' 
 
   x + y
     ^
 ```
 
-This is because when you invoke `add`, it is instantiated with the types of the arguments: every method invocation with a different type combination results in a different method instantiation.
+这是因为你调用 `add`时，他会以参数的类型实例化：以每一种类型组合调用方法都会得到不同的实例化方法。
 
-The only difference is that the first error message is a little more clear, but both definitions are safe in that you will get a compile time error anyway. So, in general, it's preferable not to specify type restrictions and almost only use them to define different method overloads. This results in more generic, reusable code. For example, if we define a class that has a `+` method but isn't a `Number`, we can use the `add` method that doesn't have type restrictions, but we can't use the `add` method that has restrictions.
+唯一的区别就是第一个错误信息更加清晰。但是两种定义都是安全的，因为错误的调用都会产生编译错误。所以总的来说，最好不要指定类型限制，只在定义不同的方法重载时使用它。这可以产生更加泛化，更加可用的代码。例如，如果我们对`Number`意外的类型定义 `+` 方法，我们就可以使用不带类型限制的 `add`方法，但是我们就不能使用有限制的那个 `add`。
 
 ```crystal
-# A class that has a + method but isn't a Number
+# 一个有 '+' 方法却不是 Number 的类:
 class Six
   def +(other)
     6 + other
   end
 end
 
-# add method without type restrictions
+# 不带类型限制的add方法:
 def add(x, y)
   x + y
 end
@@ -58,29 +58,29 @@ end
 # OK
 add Six.new, 10
 
-# add method with type restrictions
+# 带类型限制的add方法:
 def restricted_add(x : Number, y : Number)
   x + y
 end
 
-# Error: no overload matches 'restricted_add' with types Six, Int32
+# 错误: 'restricted_add'没有重载以匹配类型 Six, Int32
 restricted_add Six.new, 10
 ```
 
-Refer to the [type grammar](type_grammar.html) for the notation used in type restrictions.
+对于类型限制的写法，参考[类型语法](type_grammar.html)。
 
-Note that type restrictions do not apply to the variables inside the actual methods.
+注意类型限制不适用于方法内部的变量：
 
 ```crystal
 def handle_path(path : String)
-  path = Path.new(path) # *path* is now of the type Path
-  # Do something with *path*
+  path = Path.new(path) # *path* 现在是 Path
+  # 对 *path* 做点什么
 end
 ```
 
-## self restriction
+## self 限制
 
-A special type restriction is `self`:
+`self` 特殊的类型限制是：
 
 ```crystal
 class Person
@@ -102,11 +102,11 @@ john == peter #=> false (names differ)
 john == 1 #=> false (because 1 is not a Person)
 ```
 
-In the previous example `self` is the same as writing `Person`. But, in general, `self` is the same as writing the type that will finally own that method, which, when modules are involved, becomes more useful.
+上例中 `self` 等同于写 `Person`。但是一般来说， `self` 等同于写最终要拥有这个方法的类型。这对于模块更有用；
 
-As a side note, since `Person` inherits `Reference` the second definition of `==` is not needed, since it's already defined in `Reference`.
+另外来说，既然 `Person`继承了 `Reference`。第二个 `==` 的定义就不必要了，因为它已经定义在 `Reference`里。
 
-Note that `self` always represents a match against an instance type, even in class methods:
+注意 `self`总是代表实例类型，即使是在类方法中：
 
 ```crystal
 class Person
@@ -121,11 +121,11 @@ peter = Person.new "Peter"
 Person.compare(john, peter) # OK
 ```
 
-You can use `self.class` to restrict to the Person type. The next section talks about the `.class` suffix in type restrictions.
+你可以用 `self.class`指代 Person类型。下一章将介绍类型限制中的 `.class`后缀。
 
-## Classes as restrictions
+## 类作为类型限制
 
-Using, for example, `Int32` as a type restriction makes the method only accept instances of `Int32`:
+举个例子， `Int32` 作为类型限制使方法只能接受 `Int32`的实例：
 
 ```crystal
 def foo(x : Int32)
@@ -135,7 +135,7 @@ foo 1       # OK
 foo "hello" # Error
 ```
 
-If you want a method to only accept the type Int32 (not instances of it), you use `.class`:
+如果你想要方法只接受类型 Int32 (而不是它的示例)你应该用 `.class`：
 
 ```crystal
 def foo(x : Int32.class)
@@ -145,7 +145,7 @@ foo Int32  # OK
 foo String # Error
 ```
 
-The above is useful for providing overloads based on types, not instances:
+这对于指定类型——而不是实例——进行方法重载时很有用：
 
 ```crystal
 def foo(x : Int32.class)
@@ -160,9 +160,9 @@ foo Int32  # prints "Got Int32"
 foo String # prints "Got String"
 ```
 
-## Type restrictions in splats
+## 元组展开中的类型限制
 
-You can specify type restrictions in splats:
+你可以指定不定数目参数的类型限制：
 
 ```crystal
 def foo(*args : Int32)
@@ -171,13 +171,13 @@ end
 def foo(*args : String)
 end
 
-foo 1, 2, 3       # OK, invokes first overload
-foo "a", "b", "c" # OK, invokes second overload
+foo 1, 2, 3       # OK, 调用第一个重载
+foo "a", "b", "c" # OK, 调用第二个重载
 foo 1, 2, "hello" # Error
 foo()             # Error
 ```
 
-When specifying a type, all elements in a tuple must match that type. Additionally, the empty-tuple doesn't match any of the above cases. If you want to support the empty-tuple case, add another overload:
+当指定类型时，元组中所有的参数都要匹配这个类型。另外，空元组不会匹配上面任何一种类型。如果你要指定空元组的情况，就再加一个重载：
 
 ```crystal
 def foo
@@ -185,7 +185,7 @@ def foo
 end
 ```
 
-A simple way to match against one or more elements of any type is to use `Object` as a restriction:
+一种匹配一个或多个任意类型参数的方法是用 `Object` 做限制：
 
 ```crystal
 def foo(*args : Object)
@@ -196,9 +196,9 @@ foo(1) # OK
 foo(1, "x") # OK
 ```
 
-## Free variables
+## 类型参数
 
-You can make a type restriction take the type of an argument, or part of the type of an argument, using `forall`:
+你可以用`forall`关键字让类型限制拥有类型参数 :
 
 ```crystal
 def foo(x : T) forall T
@@ -209,9 +209,9 @@ foo(1)       #=> Int32
 foo("hello") #=> String
 ```
 
-That is, `T` becomes the type that was effectively used to instantiate the method.
+此时， `T` 成为了用于实例化方法的类型。
 
-A free variable can be used to extract the type parameter of a generic type within a type restriction:
+一个类型变量可以用于抽取出泛型类型限制中的参数类型：
 
 ```crystal
 def foo(x : Array(T)) forall T
@@ -222,7 +222,7 @@ foo([1, 2])   #=> Int32
 foo([1, "a"]) #=> (Int32 | String)
 ```
 
-To create a method that accepts a type name, rather than an instance of a type, append `.class` to a free variable in the type restriction:
+为了创建接受类型名(而不是实例)的方法，就给这个类型变量加 `.class`：
 
 ```crystal
 def foo(x : T.class) forall T
@@ -233,7 +233,7 @@ foo(Int32)  #=> Array(Int32)
 foo(String) #=> Array(String)
 ```
 
-Multiple free variables can be specified too, for matching types of multiple arguments:
+一个类型参数如果出现在多处，那就意味着这些地方的类型必须是同一个：
 
 ```crystal
 def push(element : T, array : Array(T)) forall T
