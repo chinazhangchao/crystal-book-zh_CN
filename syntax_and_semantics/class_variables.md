@@ -1,6 +1,6 @@
-# Class variables
+# 类变量
 
-Class variables are associated to classes instead of instances. They are prefixed with two "at" signs (`@@`). For example:
+类变量由类所有，而不由对象所有。它们以双"at"(`@@`)开头。例如：
 
 ```crystal
 class Counter
@@ -22,11 +22,11 @@ Counter.new
 Counter.instances #=> 3
 ```
 
-Class variables can be read and written from class methods or instance methods.
+类变量可以由类方法和实例方法读写。
 
-Their type is inferred using the [global type inference algorithm](type_inference.html).
+它们的类型也可以被 [全局类型推导规则](type_inference.html)推导。
 
-Class variables are inherited by subclasses with this meaning: their type is the same, but each class has a different runtime value. For example:
+类变量也可以继承，并遵循如下规则：它们的名称是一样的，但是每个类都分别含有一个运行时的值。例如：
 
 ```crystal
 class Parent
@@ -48,4 +48,4 @@ Parent.numbers # => [1]
 Child.numbers # => []
 ```
 
-Class variables can also be associated to modules and structs. Like above, they are inherited by including/subclassing types.
+类变量也可以从属于模块和结构体，它们也以相同的方式被包含/派生的类型继承。

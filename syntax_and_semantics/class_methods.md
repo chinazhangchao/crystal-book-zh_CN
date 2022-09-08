@@ -1,6 +1,6 @@
-# Class methods
+# 类方法
 
-Class methods are methods associated to a class or module instead of a specific instance.
+类方法是类和模块本身所拥有的方法，而不是示例所拥有的。
 
 ```crystal
 module CaesarCipher
@@ -12,7 +12,7 @@ end
 CaesarCipher.encrypt("HELLO") # => "URYYB"
 ```
 
-Class methods are defined by prefixing the method name with the type name and a period.
+类方法可以以`类型名.方法名`的形式定义。
 
 ```crystal
 def CaesarCipher.decrypt(string : String)
@@ -20,14 +20,14 @@ def CaesarCipher.decrypt(string : String)
 end
 ```
 
-When they're defined inside a class or module scope it is easier to use `self` instead of the class name.
+当在模块和类内部定义类方法时用 `self`代替类型名更加方便。
 
-Class methods can also be defined by [extending a `Module`](modules.md#extend-self).
+类方法可以由 [extend 一个模块](modules.md#extend-self)的方式定义。
 
-A class method can be called under the same name as it was defined (`CaesarCipher.decrypt("HELLO")`).
-When called from within the same class or module scope the receiver can be `self` or implicit (like `encrypt(string)`).
+类方法可以由其定义时所用的名字调用 (`CaesarCipher.decrypt("HELLO")`)。当在同一个类和模块域调用时，接收者可以是 `self` 或者隐含的`self` (像 `encrypt(string)`)。
 
-# Constructors
+# 构造函数
 
-Constructors are normal class methods which [create a new instance of the class](new,_initialize_and_allocate.md).
-By default all classes in Crystal have at least one constructor called `new`, but they may also define other constructors with different names.
+构造函数也是类方法，但是拥有 [创建类的新实例](new,_initialize_and_allocate.md)的功能。
+
+Crystal中的所有类型一般至少有一个叫做 `new`的构造函数，但他们也可以定义不同名字的构造函数。
