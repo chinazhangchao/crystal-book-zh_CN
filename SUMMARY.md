@@ -72,7 +72,7 @@
            * [运算符](syntax_and_semantics/operators.md)
            * [可见性](syntax_and_semantics/visibility.md)
            * [继承](syntax_and_semantics/inheritance.md)
-               * [虚方法和抽象方法](syntax_and_semantics/virtual_and_abstract_types.md)
+               * [虚类型和抽象类型](syntax_and_semantics/virtual_and_abstract_types.md)
            * [类方法](syntax_and_semantics/class_methods.md)
            * [类变量](syntax_and_semantics/class_variables.md)
            * [finalize](syntax_and_semantics/finalize.md)

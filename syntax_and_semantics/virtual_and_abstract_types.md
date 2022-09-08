@@ -1,6 +1,6 @@
-# Virtual and abstract types
+# 虚类型和抽象类型
 
-When a variable's type combines different types under the same class hierarchy, its type becomes a **virtual type**. This applies to every class and struct except for `Reference`, `Value`, `Int` and `Float`. An example:
+当变量的类型是同一等级下的多种类型的组合时，它的类型就是**虚类型**。这对于除了`Reference`，`Value`，`Int` 和 `Float`之外的所有类型均适用。例如：
 
 ```crystal
 class Animal
@@ -29,7 +29,7 @@ john = Person.new "John", Dog.new
 peter = Person.new "Peter", Cat.new
 ```
 
-If you compile the above program with the `tool hierarchy` command you will see this for `Person`:
+如果你加上 `tool hierarchy` 参数来编译该文档，你会发现，在 `Person`的部分：
 
 ```
 - class Object
@@ -41,9 +41,9 @@ If you compile the above program with the `tool hierarchy` command you will see 
             @pet : Animal+
 ```
 
-You can see that `@pet` is `Animal+`. The `+` means it's a virtual type, meaning "any class that inherits from `Animal`, including `Animal`".
+你可以看到 `@pet` 类型是 `Animal+`。 其中 `+` 意味着它是一个虚类型，意思是“任何继承 `Animal` 的类型，包括`Animal`”。
 
-The compiler will always resolve a type union to a virtual type if they are under the same hierarchy:
+编译器总会把同一等级下的联合类型处理成虚类型：
 
 ```
 if some_condition
@@ -55,46 +55,46 @@ end
 # pet : Animal+
 ```
 
-The compiler will always do this for classes and structs under the same hierarchy: it will find the first superclass from which all types inherit from (excluding `Reference`, `Value`, `Int` and `Float`). If it can't find one, the type union remains.
+同样地，编译器会尝试这些事情：如果多个类型在同一层类型体系下可以找到公共的超类(除了`Reference`，`Value`，`Int` 和 `Float`)，那么就把它的类型设为对应的虚类型。否则就保留联合类型。
 
-The real reason the compiler does this is to be able to compile programs faster by not creating all kinds of different similar unions, also making the generated code smaller in size. But, on the other hand, it makes sense: classes under the same hierarchy should behave in a similar way.
+编译器这么做的理由是为了免于创建多种相近的联合类型，更快地编译程序，同时使产生的代码减小。另一方面，这也有意义：在同一等级下的多个类应当有详尽的行为。
 
-Lets make John's pet talk:
+现在我们让 John 的宠物叫两声：
 
 ```crystal
-john.pet.talk # Error: undefined method 'talk' for Animal
+john.pet.talk # 错误: Animal 没有定义方法 'talk' 
 ```
 
-We get an error because the compiler now treats `@pet` as an `Animal+`, which includes `Animal`. And since it can't find a `talk` method on it, it errors.
+这个错误之所以产生，是因为编译器把`@pet`视为`Animal+`，因此它可能是 `Animal`。可`Animal`下面又没有定义`talk`方法。
 
-What the compiler doesn't know is that for us, `Animal` will never be instantiated as it doesn't make sense to instantiate one. We have a way to tell the compiler so by marking the class as `abstract`:
+然而我们比编译器多知道： `Animal` 永远不会被实例化，因为这一个实例不会有任何意义。我们要用`abstract`关键字告诉编译器这个类是抽象的： 
 
 ```crystal
 abstract class Animal
 end
 ```
 
-Now the code compiles:
+现在代码可以通过编译:
 
 ```crystal
 john.pet.talk #=> "Woof!"
 ```
 
-Marking a class as abstract will also prevent us from creating an instance of it:
+把类标记为抽象类可以阻止人创建它的示例:
 
 ```crystal
-Animal.new # Error: can't instantiate abstract class Animal
+Animal.new # 错误: 不能创建抽象类 Animal 的实例
 ```
 
-To make it more explicit that an `Animal` must define a `talk` method, we can add it to `Animal` as an abstract method:
+如果我们要显式地说明 `Animal`必须定义有 `talk` 方法，我们可以把它作为抽象方法加进 `Animal` 里面：
 
 ```crystal
 abstract class Animal
-  # Makes this animal talk
+  # 要求动物能叫，即定义方法 talk
   abstract def talk
 end
 ```
 
-By marking a method as `abstract` the compiler will check that all subclasses implement this method, even if a program doesn't use them.
+只要我们把方法标注为 `abstract` ，编译器会知道所有继承这个类的类型都要包含这个方法，即使程序没有用到它
 
-Abstract methods can also be defined in modules, and the compiler will check that including types implement them.
+抽象方法也可以定义于模块中，这样编译器会检查所有包含这个模块的类型，要求它们必须定义这个方法。
