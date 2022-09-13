@@ -1,64 +1,67 @@
-# Concurrency
+# 并发
 
-## Concurrency vs. Parallelism
+## 并发 vs. 并行
 
-The definitions of "concurrency" and "parallelism" sometimes get mixed up, but they are not the same.
+“并发”和“并行”的定义有时会混杂起来，但根本上来说它们不一样。
 
-A concurrent system is one that can be in charge of many tasks, although not necessarily it is executing them at the same time. You can think of yourself being in the kitchen cooking: you chop an onion, put it to fry, and while it's being fried you chop a tomato, but you are not doing all of those things at the same time: you distribute your time between those tasks. Parallelism would be to stir fry onions with one hand while with the other one you chop a tomato.
+一个并发系统与可以做多个任务的系统，至于是否真的在同时执行尚在其次。你可以想象你在厨房做饭：你切洋葱，把它扔进锅里炸，炸的同时你又在切西红柿。如此种种时你没有同时做所有事情，你只是把时间分配到不同的任务上。至于并行，就是你一只手在炸洋葱，另一只手又在切西红柿。
 
-At the moment of this writing, Crystal has concurrency support but not parallelism: several tasks can be executed, and a bit of time will be spent on each of these, but two code paths are never executed at the same exact time.
+此文写成之时， Crystal仍没有支持并行。只是支持并发。多个任务都能执行，每个都能分配到一些时间，但是两个任务绝不会同时执行。
 
-A Crystal program executes in a single operating system thread, except the Garbage Collector (GC) which implements a concurrent mark-and-sweep (currently [Boehm GC](http://www.hboehm.info/gc/)).
+> 译注: 1.5版本(2022年)的crystal文档中没有说明多线程并行，然而相关代码在2019年已经[合并](https://github.com/crystal-lang/crystal/pull/8112)到crystal的主分支
 
-### Fibers
+一个 Crystal 程序运行在一个操作系统线程上,只有"标记——清扫"型垃圾收集器是并行的(目前是 [Boehm GC](http://www.hboehm.info/gc/))。
 
-To achieve concurrency, Crystal has fibers. A fiber is in a way similar to an operating system thread except that it's much more lightweight and its execution is managed internally by the process. So, a program will spawn multiple fibers and Crystal will make sure to execute them when the time is right.
+### 纤程(Fibers)
 
-### Event loop
+为了实现并发， Crystal 添加了纤程 (fibers)。一个 纤程类似于操作系统线程,但是更加轻量，并且由进程内部管理。因此一个程序可以启动多个纤程，并且Crystal会保证在合适的时候执行它们。
 
-For everything I/O related there's an event loop. Some time-consuming operations are delegated to it, and while the event loop waits for that operation to finish the program can continue executing other fibers. A simple example of this is waiting for data to come through a socket.
+### 事件循环
 
-### Channels
+每个有关 I/O 的对象都配有一个事件循环。有些耗时的操作会被委派给它们, 当事件循环等待这个操作执行时，程序可以执行其他的纤程。一个简单的例子是等待从 socket中传来的数据。
 
-Crystal has Channels inspired by [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes). They allow communicating data between fibers without sharing memory and without having to worry about locks, semaphores or other special structures.
+### 管道(Channels)
 
-## Execution of a program
+Crystal有受[CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes)启发而得的管道 (Channels)。它们可以在纤程间传递信息而不用手动传递内存，因此编程时也不用担心锁，信号量等结构和问题。
 
-When a program starts, it fires up a main fiber that will execute your top-level code. There, one can spawn many other fibers. The components of a program are:
+> 译注: 原文不便访问，[这篇文档](https://zhuanlan.zhihu.com/p/455843256)讲了Actor和CSP两种并发模型。
+## 一个程序的执行流程
 
-* The Runtime Scheduler, in charge of executing all fibers when the time is right.
-* The Event Loop, which is just another fiber, being in charge of async tasks, like for example files, sockets, pipes, signals and timers (like doing a `sleep`).
-* Channels, to communicate data between fibers. The Runtime Scheduler will coordinate fibers and channels for their communication.
-* Garbage Collector: to clean up "no longer used" memory.
+当一个程序启动时，他会启动在你顶层代码执行的主纤程。一个纤程可以启动其他纤程。程序大概由这几部分组成：
 
-### A Fiber
+* 运行时调度器：在合适的时间执行所有纤程
+* 事件循环：它也是另一个纤程，用来管理异步任务，例如文件，socket，管道(pipes)，信号量和计时器(比如执行 `sleep`)。
+* 管道：用以在纤程间传递数据。运行时调度器会协调纤程和管道之间的通讯。
+* 垃圾收集器: 清理 "不再有用"的内存。
 
-A fiber is an execution unit that is more lightweight than a thread. It's a small object that has an associated [stack](https://en.wikipedia.org/wiki/Call_stack) of 8MB, which is what is usually assigned to an operating system thread.
+### 纤程fiber)
 
-Fibers, unlike threads, are cooperative. Threads are pre-emptive: the operating system might interrupt a thread at any time and start executing another one. A fiber must explicitly tell the Runtime Scheduler to switch to another fiber. For example if there's I/O to be waited on, a fiber will tell the scheduler "Look, I have to wait for this I/O to be available, you continue executing other fibers and come back to me when that I/O is ready".
+纤程(fiber)是程序执行的单元，但是比线程更轻量。它就是一个关联到一个of 8MB  [栈](https://en.wikipedia.org/wiki/Call_stack) 的小对象, 而栈则被分配给一个操作系统线程。
 
-The advantage of being cooperative is that a lot of the overhead of doing a context switch (switching between threads) is gone.
+纤程是协作式的，这一点与线程不同。线程是抢占式的：操作系统可能在任何时候打断一个线程其执行另一个。一个纤程必须显式地通知调度器去执行其他纤程。举个例子，如果一个纤程要等待 I/O 操作， 它会告诉调度器： “看，我要等这个 I/O 操作可用，你先执行其他纤程，等这个 I/O 好的时候再叫我。”
 
-A Fiber is much more lightweight than a thread: even though it's assigned 8MB, it starts with a small stack of 4KB.
+协作式执行的好处是：这避免了切换上下文(切换纤程时所必须)的一大堆开销。
 
-On a 64-bit machine it lets us spawn millions and millions of fibers. In a 32-bit machine we can only spawn 512 fibers, which is not a lot. But because 32-bit machines are starting to become obsolete, we'll bet on the future and focus more on 64-bit machines.
+纤程比一线程轻量之处在于：即使它被分配了 8MB的栈空间，他一开始也只是一个 4KB的小栈。
 
-### The Runtime Scheduler
+在 64位机器上我们可以启动不计其数的纤程，而在32位机上我们最多启动 512个纤程。不过32位机现在已经濒临过时，我们以后就只注重64位机。
 
-The scheduler has a queue of:
-* Fibers ready to be executed: for example when you spawn a fiber, it's ready to be executed.
-* The event loop: which is another fiber. When there are no other fibers ready to be executed, the event loop checks if there is any async operation that is ready, and then executes the fiber waiting for that operation. The event loop is currently implemented with `libevent`, which is an abstraction of other event mechanisms like `epoll` and `kqueue`.
-* Fibers that voluntarily asked to wait: this is done with `Fiber.yield`, which means "I can continue executing, but I'll give you some time to execute other fibers if you want".
+### 运行时调度器
 
-### Communicating data
+调度区用一个队列容纳：
+* 就绪的纤程：比如你启动一个纤程时，他就是就绪的，可以执行。
+* 事件循环： 其实也是纤程. 当没有其他可执行的纤程时事件循环会检查有没有异步操作完成，如果有，就执行依赖于它的纤程。事件循环目前是由 `libevent`实现，它是`epoll` 或 `kqueue`等机制的抽象。
+* 自发要求等待的纤程：这可以由 `Fiber.yield`指定，意思是 “我本可以继续执行，但是我给你机会去执行其他的纤程。”
 
-Because at this moment there's only a single thread executing your code, accessing and modifying a class variable in different fibers will work just fine. However, once multiple threads (parallelism) is introduced in the language, it might break. That's why the recommended mechanism to communicate data is using channels and sending messages between them. Internally, a channel implements all the locking mechanisms to avoid data races, but from the outside you use them as communication primitives, so you (the user) don't have to use locks.
+### 数据交流
 
-## Sample code
+因为现在只有一个事实的线程在执行程序，多个纤程获取和更改同一个类变量暂时没有问题。但是一旦语言中实现了多线程 (并行) 它就可能有隐患。因此不要这样传递数据，而是建立管道，通过管道发送消息。在内部，一个管道实现了加锁机制以避免数据竞争，然而在外部，你把它当做交流的基本方式。这样你(用户)就不必手动加锁。
 
-### Spawning a fiber
+## 代码示例
 
-To spawn a fiber you use `spawn` with a block:
+### 生成一个纤程
+
+用 `spawn` 加一个块来生成纤程：
 
 ```crystal
 spawn do
@@ -74,11 +77,11 @@ spawn do
 end
 ```
 
-Here we have two fibers: one reads from a socket and the other does a `sleep`. When the first fiber reaches the `socket.gets` line, it gets suspended, the Event Loop is told to continue executing this fiber when there's data in the socket, and the program continues with the second fiber. This fiber wants to sleep for 5 seconds, so the Event Loop is told to continue with this fiber in 5 seconds. If there aren't other fibers to execute, the Event Loop will wait until either of these events happen, without consuming CPU time.
+现在我们有了两个纤程：一个从socket中读取消息，另一个只是做 `sleep`。当第一个纤程到达 `socket.gets` 一行，它就会被挂起，事件循环会记得在socket有消息后执行这个纤程。然后程序会执行第二个纤程。这个纤程想要睡5秒，因此事件循环会记得在5秒后执行这个纤程。如果此时没有其他纤程可执行，事件循环会等到这些事件发生，而不用占用CPU时间。
 
-The reason why `socket.gets` and `sleep` behave like this is because their implementations talk directly with the Runtime Scheduler and the Event Loop, there's nothing magical about it. In general, the standard library already takes care of doing all of this so you don't have to.
+`socket.gets` 和 `sleep` 表现如此的原因是它们的实现直接面对运行时调度器，这不是什么玄学。只是标准库往往已经包揽了这些工作，你不用手动做而已。
 
-Note, however, that fibers don't get executed right away. For example:
+然而注意，纤程不会在创建时立刻执行。例如：
 
 ```crystal
 spawn do
@@ -88,11 +91,11 @@ spawn do
 end
 ```
 
-Running the above code will produce no output and exit immediately.
+运行这些代码，程序就会利己退出，什么输出也不会有。
 
-The reason for this is that a fiber is not executed as soon as it is spawned. So, the main fiber, the one that spawns the above fiber, finishes its execution and the program exits.
+这是因为纤程并不会在创建时立即执行。因此，主纤程创建了这个纤程，自己执行，然后整个程序就退了出。
 
-One way to solve it is to do a `sleep`:
+一个解决方案是加 `sleep`：
 
 ```crystal
 spawn do
@@ -104,9 +107,9 @@ end
 sleep 1.second
 ```
 
-This program will now print "Hello!" for one second and then exit. This is because the `sleep` call will schedule the main fiber to be executed in a second, and then executes another "ready to execute" fiber, which in this case is the one above.
+这个程序会在一秒内持续打印打印 "Hello!"，然后退出。这是因为 `sleep`会让主纤程等到一秒后才被执行，这时程序会执行另一个就绪的纤程，即上面一直打 "Hello!"的那个。
 
-Another way is this:
+另一种方法是：
 
 ```crystal
 spawn do
@@ -118,10 +121,11 @@ end
 Fiber.yield
 ```
 
-This time `Fiber.yield` will tell the scheduler to execute the other fiber. This will print "Hello!" until the standard output blocks (the system call will tell us we have to wait until the output is ready), and then execution continues with the main fiber and the program exits. Here the standard output *might* never block so the program will continue executing forever.
+这次 `Fiber.yield` 会告诉调度器去执行其他纤程。这会打印 "Hello!" 直到标准输出阻塞 (系统调用会告诉我们等到标准输出可用的时候)，然后主纤程恢复执行，程序退出。这里标准输出*也许* 不会阻塞，于是程序就会一直执行下去。
 
-If we want to execute the spawned fiber for ever, we can use `sleep` without arguments:
+如果我们想要永远执行一个所创建的纤程，我们可以使用不加参数的 `sleep`：
 
+> 译注 : 永眠 ()
 ```crystal
 spawn do
   loop do
@@ -132,11 +136,11 @@ end
 sleep
 ```
 
-Of course the above program can be written without `spawn` at all, just with a loop. `sleep` is more useful when spawning more than one fiber.
+当然这个程序根本用不着 `spawn`，直接写循环就行了。 `sleep` 在创建多个纤程时更有用。
 
-### Spawning a call
+### 生成方法调用
 
-You can also spawn by passing a method call instead of a block. To understand why this is useful, let's look at this example:
+你也可以生成一个纤程去调用方法，而不是执行块。你可以看这个例子来明白它的用处：
 
 ```crystal
 i = 0
@@ -150,9 +154,9 @@ end
 Fiber.yield
 ```
 
-The above program prints "10" ten times. The problem is that there's only one variable `i` that all spawned fibers refer to, and when `Fiber.yield` is executed its value is 10.
+上面的程序会打印 "10" 十次。问题在于所有创建的纤程都指向同一个变量 `i` ，当 `Fiber.yield`执行时，它的值是 10。
 
-To solve this, we can do this:
+解决方法是：
 
 ```crystal
 i = 0
@@ -169,9 +173,9 @@ end
 Fiber.yield
 ```
 
-Now it works because we are creating a [Proc](http://crystal-lang.org/api/Proc.html) and we invoke it passing `i`, so the value gets copied and now the spawned fiber receives a copy.
+现在它正常的打印了。因为我们创建了 [闭包](http://crystal-lang.org/api/Proc.html) 来捕获 `i`，然后调用它，所以这个值被复制了，被创建的纤程得到的是原数的备份。
 
-To avoid all this boilerplate, the standard library provides a `spawn` macro that accepts a call expression and basically rewrites it to do the above. Using it, we end up with:
+为了避免写样板代码，标准库提供了 `spawn` 宏。它接受一个调用表达式，然后把它重写成上面的样子。使用它，我们得到了：
 
 ```crystal
 i = 0
@@ -183,7 +187,7 @@ end
 Fiber.yield
 ```
 
-This is mostly useful with local variables that change at iterations. This doesn't happen with block arguments. For example, this works as expected:
+这在局部变量碎迭代更改时非常有用。这不会用于块参数。例如，这个程序也能正常输出：
 
 ```crystal
 10.times do |i|
@@ -195,9 +199,9 @@ end
 Fiber.yield
 ```
 
-### Spawning a fiber and waiting for it to complete
+### 生成一个纤程，等待它完成
 
-We can use a channel for this:
+为此我们可以使用管道：
 
 ```crystal
 channel = Channel(Nil).new
@@ -221,9 +225,9 @@ Before send
 After receive
 ```
 
-First, the program spawns a fiber but doesn't execute it yet. When we invoke `channel.receive`, the main fiber blocks and execution continues with the spawned fiber. Then `channel.send(nil)` is invoked, and so execution continues at `channel.receive`, which was waiting for a value. Then the main fiber continues executing and finishes, so the program exits without giving the other fiber a chance to print "After send".
+首先程序创建了一个纤程，但不立刻执行它。当我们调用 `channel.receive`时，主纤程阻塞，这个被创建的纤程开始执行。然后 `channel.send(nil)` 被调用，继而 `channel.receive`被执行，他等待的值终于来了。然后主纤程继续执行，直到结束，随后程序退出，其他纤程来不及机会打印"After send"就被清理了。
 
-In the above example we used `nil` just to communicate that the fiber ended. We can also use channels to communicate values between fibers:
+上例中我们使用 `nil`只是为了告诉他人纤程的结束。我们也可以用管道在纤程之间传值：
 
 ```crystal
 channel = Channel(Int32).new
@@ -255,9 +259,9 @@ Before second send
 2
 ```
 
-Note that when the program executes a `receive`, that fiber blocks and execution continues with the other fiber. When `send` is executed, execution continues with the fiber that was waiting on that channel.
+注意当程序执行一个 `receive`时，纤程阻塞，另一个纤程执行。当执行 `send`时，控制流回到等待这个值的纤程。
 
-Here we are sending literal values, but the spawned fiber might compute this value by, for example, reading a file, or getting it from a socket. When this fiber will have to wait for I/O, other fibers will be able to continue executing code until I/O is ready, and finally when the value is ready and sent through the channel, the main fiber will receive it. For example:
+这里我们在发送字面量，但是被创建的纤程可以用多种方式得到这个值。比如读一个文档，或是等待来自socket的消息。 当这个纤程必须等待 I/O时，其他的纤程可以趁这个机会执行，直到 I/O 完成。然后这个值终于通过管道传给了主纤程。例如：
 
 ```crystal
 require "socket"
@@ -283,9 +287,9 @@ end
 end
 ```
 
-The above program spawns two fibers. The first one creates a TCPServer, accepts one connection and reads lines from it, sending them to the channel. There's a second fiber reading lines from standard input. The main fiber reads the first 3 messages sent to the channel, either from the socket or stdin, then the program exits. The `gets` calls will block the fibers and tell the Event Loop to continue from there if data comes.
+上述程序创建了两个纤程。第一个创建了 TCPServer，等待一个连接，并且从中按行读取文本，把它们发给管道。第二个纤程从标准输入按行读取文本，主纤程从管道读取前三条消息息——而不管它从标准输入还是TCP服务器——然后程序退出 。 `gets`会阻塞纤程，告诉调度器有消息来了再启动它。
 
-Likewise, we can wait for multiple fibers to complete execution, and gather their values:
+类似地我们可以等待多个纤程去完成执行，然后获取它们的值：
 
 ```crystal
 channel = Channel(Int32).new
@@ -303,7 +307,7 @@ end
 puts sum # => 90
 ```
 
-You can, of course, use `receive` inside a spawned fiber:
+当然，你可以在创建的纤程内使用 `receive`：
 
 ```crystal
 channel = Channel(Int32).new
@@ -325,7 +329,7 @@ Fiber.yield
 puts "After yield"
 ```
 
-Output:
+输出:
 
 ```text
 Before yield
@@ -337,16 +341,16 @@ After send
 After yield
 ```
 
-Here `channel.send` is executed first, but since there's no one waiting for a value (yet), execution continues in other fibers. The second fiber is executed, there's a value on the channel, it's obtained, and execution continues, first with the first fiber, then with the main fiber, because `Fiber.yield` puts a fiber at the end of the execution queue.
+此处 `channel.send` 先执行，但是因为目前没有纤程想要这个值，它就先挂起该纤程，等其他纤程执行。后来第二个纤程执行。它从管道中取值的时候，里面正好有一个值。于是它获得这个值，继续执行。接下来先执行第一个纤程，然后是主纤程，因为 `Fiber.yield` 把一个纤程放在执行队列的最后面。
 
-### Buffered channels
+### 缓存管道
 
-The above examples use unbuffered channels: when sending a value, if a fiber is waiting on that channel then execution continues on that fiber.
+上例中我们用的是无缓存的管道：当发送值时，如果一个纤程在等待这个值，那控制流就会转到那个纤程上。
 
-With a buffered channel, invoking `send` won't switch to another fiber unless the buffer is full:
+通过使用带缓存的管道时，调用 `send` 不会利己跳到另外的纤程，除非缓存区已满：
 
 ```crystal
-# A buffered channel of capacity 2
+# 容量为 2 的缓存管道
 channel = Channel(Int32).new(2)
 
 spawn do
@@ -364,7 +368,7 @@ end
 end
 ```
 
-Output:
+输出：
 
 ```
 Before send 1
@@ -376,4 +380,4 @@ After send
 3
 ```
 
-Note that the first 2 sends are executed without switching to another fiber. However, in the third send the channel's buffer is full, so execution goes to the main fiber. Here the two values are received and the channel is depleted. At the third `receive` the main fiber blocks and execution goes to the other fiber, which sends more values, finishes, etc.
+注意前两次发送执行时，控制流没有跑到其他纤程上，然而，在第三次发送时，管道的缓存已经满了，所以控制流回到了主纤程。主纤程收到两个值之后，管道又空了，所以第三次执行`receive`时，主纤程阻塞，控制流回到上面的纤程，它发送信息，然后结束。然后主纤程又去做接下来的事情。

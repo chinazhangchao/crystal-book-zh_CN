@@ -1,30 +1,23 @@
 # finalize
 
-If a class defines a `finalize` method, when an instance of that class is
-garbage-collected that method will be invoked:
+如果一个类定义了 `finalize`方法，那么它会在该类型的一个实例被回收的时候调用：
 
 ```crystal
 class Foo
   def finalize
-    # Invoked when Foo is garbage-collected
-    # Use to release non-managed resources (ie. C libraries, structs)
+    # 当 Foo 被垃圾回收时调用
+    # 用于释放未托管的资源 (比如 C 动态库或结构体)
   end
 end
 ```
 
-Use this method to release resources allocated by external libraries that are
-not directly managed by Crystal garbage collector.
+用这个方法释放没有被Crystal垃圾回收器直接管理的外部资源。
 
-Examples of this can be found in [`IO::FileDescriptor#finalize`](https://crystal-lang.org/api/IO/FileDescriptor.html#finalize-instance-method)
-or [`OpenSSL::Digest#finalize`](https://crystal-lang.org/api/OpenSSL/Digest.html#finalize-instance-method).
+用例可见于 [`IO::FileDescriptor#finalize`](https://crystal-lang.org/api/IO/FileDescriptor.html#finalize-instance-method)
+或 [`OpenSSL::Digest#finalize`](https://crystal-lang.org/api/OpenSSL/Digest.html#finalize-instance-method)。
 
-**Notes**:
+**注意**：
 
-- The `finalize` method will only be invoked once the object has been
-fully initialized via the `initialize` method. If an exception is raised
-inside the `initialize` method, `finalize` won't be invoked. If your class
-defines a `finalize` method, be sure to catch any exceptions that might be
-raised in the `initialize` methods and free resources.
+- 只有被完整初始化的对象会调用`finalize` 方法。如果`initialize`的内部有异常抛出，`finalize`就不会被调用。如果你的类型定义了 `finalize`方法，记得揽住 `initialize`中任何可能出现的异常，并在处理异常时释放资源。
 
-- Allocating any new object instances during garbage-collection might result
-in undefined behavior and most likely crashing your program.
+- 在垃圾回收期间创建新对象是未定义行为，这往往会导致程序整体崩溃。

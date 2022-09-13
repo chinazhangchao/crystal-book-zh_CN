@@ -1,6 +1,6 @@
-# Generics
+# 泛型
 
-Generics allow you to parameterize a type based on other type. Consider a Box type:
+泛型使你可以基于其他类型制定一个参数化类型。考虑这个 Box 类型：
 
 ```crystal
 class MyBox(T)
@@ -18,44 +18,44 @@ int_box.value # => 1 (Int32)
 string_box = MyBox(String).new("hello")
 string_box.value # => "hello" (String)
 
-another_box = MyBox(String).new(1) # Error, Int32 doesn't match String
+another_box = MyBox(String).new(1) # 错误, Int32 不匹配 String
 ```
 
-Generics are especially useful for implementing collection types. `Array`, `Hash`, `Set` are generic types, as is `Pointer`.
+泛型常用于制作集合类型。`Array`，`Hash`，`Set` 都是泛型， `Pointer`也是。
 
-More than one type argument is allowed:
+类型参数可以不止一个：
 
 ```crystal
 class MyDictionary(K, V)
 end
 ```
 
-Any name can be used for type arguments:
+任何类型都能做类型参数：
 
 ```crystal
 class MyDictionary(KeyType, ValueType)
 end
 ```
 
-## Type variables inference
+## 类型变量推导
 
-Type restrictions in a generic type's constructor are free variables when type arguments were not specified, and then are used to infer them. For example:
+当不指定类型参数时，编译器会尝试由构造函数中的变量类型推导泛型类型参数。例如：
 
 ```crystal
 MyBox.new(1)       # : MyBox(Int32)
 MyBox.new("hello") # : MyBox(String)
 ```
 
-In the above code we didn't have to specify the type arguments of `MyBox`, the compiler inferred them following this process:
+上例中我们不必指定 `MyBox`缝纫类型参数，编译器会以如下的方式确定它：
 
-* `MyBox.new(value)` delegates to `initialize(@value : T)`
-* `T` isn't bound to a type yet, so the compiler binds it to the type of the given argument
+* `MyBox.new(value)` 委派给 `initialize(@value : T)`
+* `T` 还没有绑定到一个类型，所以编译器把它绑定到给出参数变量的类型
 
-In this way generic types are less tedious to work with.
+这样设计和构造泛型就会变得更方便。
 
-## Generic structs and modules
+## 泛型结构体和模块
 
-Structs and modules can be generic too. When a module is generic you include it like this:
+结构体和模块也可以是泛型。当模块是泛型时你可以这样包括它：
 
 ```crystal
 module Moo(T)
@@ -75,11 +75,11 @@ foo = Foo.new(1)
 foo.t # Int32
 ```
 
-Note that in the above example `T` becomes `Int32` because `Foo.new(1)` makes `U` become `Int32`, which in turn makes `T` become `Int32` via the inclusion of the generic module.
+注意，上例中因为`Foo.new(1)` 表明了 `U` 是 `Int32`，所以 `T` 是 `Int32` ，继而在包含的模块中 `T` 也是 `Int32`。
 
-## Generic types inheritance
+## 泛型类型继承
 
-Generic classes and structs can be inherited. When inheriting you can specify an instance of the generic type, or delegate type variables:
+泛型类和结构体也可以继承。当继承时你可以指定一个泛型实例，也可以把类型变量传递出去：
 
 ```crystal
 class Parent(T)
