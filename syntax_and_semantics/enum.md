@@ -1,6 +1,6 @@
-# Enums
+# 枚举
 
-An enum is a set of integer values, where each value has an associated name. For example:
+枚举是一系列与名称相绑定的整数值。例如：
 
 ```crystal
 enum Color
@@ -10,30 +10,30 @@ enum Color
 end
 ```
 
-An enum is defined with the `enum` keyword, followed by its name. The enum's body contains the values. Values start with the value `0` and are incremented by one. The default value can be overwritten:
+以 `enum`关键字定义枚举。先写关键字，后面接名称。枚举体内包含它们的值，默认从`0`开始，每次加1，不过这个默认值可以覆盖：
 
 ```crystal
 enum Color
   Red         # 0
   Green       # 1
-  Blue   = 5  # overwritten to 5
+  Blue   = 5  # 覆盖到 5
   Yellow      # 6 (5 + 1)
 end
 ```
 
-Each constant in the enum has the type of the enum:
+枚举中的每个常量都属于该枚举类型：
 
 ```crystal
 Color::Red #:: Color
 ```
 
-To get the underlying value you invoke `value` on it:
+用 `value`取得它所代表的值：
 
 ```crystal
 Color::Green.value #=> 1
 ```
 
-The type of the value is `Int32` by default but can be changed:
+枚举的底层类型默认是 `Int32` ，但可以修改：
 
 ```crystal
 enum Color : UInt8
@@ -45,13 +45,13 @@ end
 Color::Red.value #:: UInt8
 ```
 
-Only integer types are allowed as the underlying type.
+只有整数枚举可以设置底层类型。
 
-All enums inherit from [Enum](http://crystal-lang.org/api/Enum.html).
+所有的枚举都继承 [Enum](http://crystal-lang.org/api/Enum.html)。
 
-## Flags enums
+## 位枚举
 
-An enum can be marked with the `@[Flags]` attribute. This changes the default values:
+枚举可以加 `@[Flags]` 属性。这会改变基础值和增加方式：
 
 ```crystal
 @[Flags]
@@ -62,41 +62,41 @@ enum IOMode
 end
 ```
 
-The `@[Flags]` attribute makes the first constant's value be `1`, and successive constants are multiplied by `2`.
+`@[Flags]`属性让初始值设为 `1`，后继的每个值都是原值乘以 `2`的积。
 
-Implicit constants, `None` and `All`, are automatically added to these enums, where `None` has the value `0` and `All` has the "or"ed value of all constants.
+这种枚举还会隐式地拥有两个额外变量 `None`和 `All`。 `None` 的值为 `0` ， `All`有所有常量(以位或运算)合并的积。
 
 ```crystal
 IOMode::None.value #=> 0
 IOMode::All.value  #=> 7
 ```
 
-Additionally, some `Enum` methods check the `@[Flags]` attribute. For example:
+同时， `Enum`的某些方法会查看 `@[Flags]` 属性，并改变自身的行为。例如：
 
 ```crystal
-puts(Color::Red)                    # prints "Red"
-puts(IOMode::Write | IOMode::Async) # prints "Write, Async"
+puts(Color::Red)                    # 打印 "Red"
+puts(IOMode::Write | IOMode::Async) # 打印 "Write, Async"
 ```
 
-## Enums from integers
+## 从整数构造枚举
 
-An enum can be created from an integer:
+所有的枚举都可以由整数构造：
 
 ```crystal
-puts Color.new(1) #=> prints "Green"
+puts Color.new(1) #=> 打印 "Green"
 ```
 
-Values that don't correspond to an enum's constants are allowed: the value will still be of type `Color`, but when printed you will get the underlying value:
+不是枚举中元素的的值也可以输入，同样拥有 `Color`类型。但是如果你打印它，就会得到它隐含的值：
 
 ```crystal
-puts Color.new(10) #=> prints "10"
+puts Color.new(10) #=> 打印 "10"
 ```
 
-This method is mainly intended to convert integers from C to enums in Crystal.
+这个方法主要用于把C枚举转为Crystal枚举。
 
-## Methods
+## 方法
 
-Just like a class or a struct, you can define methods for enums:
+类似于结构体，你可以给枚举定义方法：
 
 ```crystal
 enum Color
@@ -113,11 +113,11 @@ Color::Red.red?  #=> true
 Color::Blue.red? #=> false
 ```
 
-Class variables are allowed, but instance variables are not.
+枚举可以有类变量，但不可以有成员变量。
 
-## Usage
+## 用法
 
-Enums are a type-safe alternative to [Symbol](http://crystal-lang.org/api/Symbol.html). For example, an API's method can specify a [type restriction](type_restrictions.html) using an enum type:
+枚举是类型安全的 [符号](http://crystal-lang.org/api/Symbol.html)替代品。例如，一个 API的方法可以用枚举类型确定 [类型限制](type_restrictions.html)：
 
 ```crystal
 def paint(color : Color)
@@ -125,7 +125,7 @@ def paint(color : Color)
   when Color::Red
     # ...
   else
-    # Unusual, but still can happen
+    # 罕见，但有可能发生
     raise "unknown color: #{color}"
   end
 end
@@ -133,7 +133,7 @@ end
 paint Color::Red
 ```
 
-The above could also be implemented with a Symbol:
+上式也可以用 Symbol 实现：
 
 ```crystal
 def paint(color : Symbol)
@@ -148,6 +148,6 @@ end
 paint :red
 ```
 
-However, if the programmer makes a typo, say `:reed`, the error will only be caught at runtime, while attempting to use `Color::Reed` will result in a compile-time error.
+但是，如果程序员错打成 `:reed`，那这个错误会在运行时出现，但尝试输入 `Color::Reed`会导致编译错误。
 
-The recommended thing to do is to use enums whenever possible, only use symbols for the internal implementation of an API, and avoid symbols for public APIs. But you are free to do what you want.
+我们推荐在任何可能的地方都用枚举，只在API内部实现中使用符号，而避免在公共API中使用。不过你可以按你的意愿来决定如何使用它们。
