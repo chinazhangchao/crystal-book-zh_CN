@@ -1,7 +1,6 @@
-# Blocks and Procs
+# 块和闭包 
 
-Methods can accept a block of code that is executed
-with the `yield` keyword. For example:
+方法可以接受一个程序块，然后用 `yield`关键字执行它。例如：
 
 ```crystal
 def twice
@@ -14,9 +13,9 @@ twice do
 end
 ```
 
-The above program prints "Hello!" twice, once for each `yield`.
+上面的例子会打印 "Hello!"两次，每个 `yield`一次。
 
-To define a method that receives a block, simply use `yield` inside it and the compiler will know. You can make this more evident by declaring a dummy block argument, indicated as a last argument prefixed with ampersand (`&`):
+为了接受一个带有块的方法，只要在方法体中加入 `yield`，然后编译器会明白你的意图。 你可以加入一个块参数来让更明显地表述。块参数应当写在最后，并在名字前面加与号 (`&`)：
 
 ```crystal
 def twice(&block)
@@ -25,7 +24,7 @@ def twice(&block)
 end
 ```
 
-To invoke a method and pass a block, you use `do ... end` or `{ ... }`. All of these are equivalent:
+为了向这些方法传入块参数，你可以写 `do ... end` 或是 `{ ... }`，这两种写法等价：
 
 ```crystal
 twice() do
@@ -39,51 +38,51 @@ end
 twice { puts "Hello!" }
 ```
 
-The difference between using `do ... end` and `{ ... }` is that `do ... end` binds to the left-most call, while `{ ... }` binds to the right-most call:
+`do ... end` 和 `{ ... }` 之间的区别是 `do ... end` 绑定到最左面的调用，而 `{ ... }` 绑定到最右边的调用：
 
 ```crystal
 foo bar do
   something
 end
 
-# The above is the same as
+# 上式等价于
 foo(bar) do
   something
 end
 
 foo bar { something }
 
-# The above is the same as
+# 上式等价于
 
 foo(bar { something })
 ```
 
-The reason for this is to allow creating Domain Specific Languages (DSLs) using `do ... end` to have them be read as plain English:
+这样你就可以用`do ... end`创建领域特定语言 (DSL) ，让他们看起来更像英语(或是你的母语)：
 
 ```crystal
 open file "foo.cr" do
   something
 end
 
-# Same as:
+# 等同于:
 open(file("foo.cr")) do
 end
 ```
 
-You wouldn't want the above to be:
+你不会喜欢写：
 
 ```crystal
 open(file("foo.cr") do
 end)
 ```
 
-## Overloads
+## 对于重载
 
-Two methods, one that yields and another that doesn't, are considered different overloads, as explained in the [overloading](overloading.html) section.
+如果两个方法名字相同，一个接受块，一个不接受，那么它们会被认为是两个不同的方法。详见[重载](overloading.html) 一章。
 
-## Yield arguments
+## 向块传递参数
 
-The `yield` expression is similar to a call and can receive arguments. For example:
+`yield` 表达式类似于调用，也可以接收参数。例如：
 
 ```crystal
 def twice
@@ -96,15 +95,15 @@ twice do |i|
 end
 ```
 
-The above prints "Got 1" and "Got 2".
+它会打印 "Got 1" 和 "Got 2"。
 
-A curly braces notation is also available:
+也可以用花括号：
 
 ```crystal
 twice { |i| puts "Got #{i}" }
 ```
 
-You can `yield` many values:
+可以 `yield`多个值：
 
 ```crystal
 def many
@@ -115,10 +114,10 @@ many do |x, y, z|
   puts x + y + z
 end
 
-# Output: 6
+# 输出: 6
 ```
 
-A block can specify less than the arguments yielded:
+一个块可以不完全接受这些参数：
 
 ```crystal
 def many
@@ -129,10 +128,10 @@ many do |x, y|
   puts x + y
 end
 
-# Output: 3
+# 输出: 3
 ```
 
-It's an error specifying more block arguments than those yielded:
+但如果接受超出了传送额缝纫参数，那就会产生错误：
 
 ```crystal
 def twice
@@ -140,11 +139,11 @@ def twice
   yield
 end
 
-twice do |i| # Error: too many block arguments
+twice do |i| # 错误: 块要求参数过多
 end
 ```
 
-Each block variable has the type of every yield expression in that position. For example:
+每个块内变量的类型是该位置传进来所有变量类型的并。例如：
 
 ```crystal
 def some
@@ -159,11 +158,11 @@ some do |first, second|
 end
 ```
 
-The block variable `second` also includes the `Nil` type because the last `yield` expression didn't include a second argument.
+快变量 `second` 也可以是 `Nil` ，因为最后一个 `yield` 表达式没有包含第二个参数。
 
-## Short one-argument syntax
+## 单参数块的简便写法
 
-A short syntax exists for specifying a block that receives a single argument and invokes a method on it. This:
+如果某个块只是接受一个参数，调用它的某个方法，那么有一个简便的方法表示它：
 
 ```crystal
 method do |argument|
@@ -171,36 +170,36 @@ method do |argument|
 end
 ```
 
-Can be written as this:
+可以这么写：
 
 ```crystal
 method &.some_method
 ```
 
-Or like this:
+或是：
 
 ```crystal
 method(&.some_method)
 ```
 
-The above is just syntax sugar and doesn't have any performance penalty.
+这只是个语法糖，不会产生性能损失。
 
-Arguments can be passed to `some_method` as well:
+也可以把参数传给 `some_method`：
 
 ```crystal
 method &.some_method(arg1, arg2)
 ```
 
-And operators can be invoked too:
+这也适用于运算符：
 
 ```crystal
 method &.+(2)
 method &.[index]
 ```
 
-## yield value
+## 产出值
 
-The `yield` expression itself has a value: the last expression of the block. For example:
+`yield` 表达式本身也有值：块中的最后一个表达式的值。例如：
 
 ```crystal
 def twice
@@ -216,9 +215,9 @@ twice do |i|
 end
 ```
 
-The above prints "2" and "3".
+上式会打印 "2" 和 "3"；
 
-A `yield` expression's value is mostly useful for transforming and filtering values. The best examples of this are [Enumerable#map](http://crystal-lang.org/api/Enumerable.html#map%28%26block%20%3A%20T%20-%3E%20U%29-instance-method) and [Enumerable#select](http://crystal-lang.org/api/Enumerable.html#select%28%26block%20%3A%20T%20-%3E%20%29-instance-method):
+`yield`表达式在变换换筛选值时尤其有用。最好的例子是 [Enumerable#map](http://crystal-lang.org/api/Enumerable.html#map%28%26block%20%3A%20T%20-%3E%20U%29-instance-method) 和[Enumerable#select](http://crystal-lang.org/api/Enumerable.html#select%28%26block%20%3A%20T%20-%3E%20%29-instance-method)：
 
 ```crystal
 ary = [1, 2, 3]
@@ -226,7 +225,7 @@ ary.map { |x| x + 1 }         #=> [2, 3, 4]
 ary.select { |x| x % 2 == 1 } #=> [1, 3]
 ```
 
-A dummy transformation method:
+有一个形式上的转换方法：
 
 ```crystal
 def transform(value)
@@ -236,11 +235,11 @@ end
 transform(1) { |x| x + 1 } #=> 2
 ```
 
-The result of the last expression is `2` because the last expression of the `transform` method is `yield`, whose value is the last expression of the block.
+最后一个表达式的结果是 `2`，因为 `transform`方法的最后一个表达式是 `yield`，它的值又是块的最后一个表达式。
 
-## Type restrictions
+## 类型限制
 
-The type of the block in a method that uses `yield` can be restricted using the `&block` syntax. For example:
+使用 `yield` 的方法中，块的类型可以用 `&block`的属性进行限制。例如：
 
 ```crystal
 def transform_int(start : Int32, &block : Int32 -> Int32)
@@ -249,12 +248,12 @@ def transform_int(start : Int32, &block : Int32 -> Int32)
 end
 
 transform_int(3) { |x| x + 2 } #=> 10
-transform_int(3) { |x| "foo" } # Error: expected block to return Int32, not String
+transform_int(3) { |x| "foo" } # 错误：块应该返回Int32，而不是String 
 ```
 
 ## break
 
-A `break` expression inside a block exits early from the method:
+块内的`break` 表达式可以提前跳出这个方法：
 
 ```crystal
 def thrice
@@ -274,9 +273,9 @@ thrice do |i|
 end
 ```
 
-The above prints "Before 1" and "Before 2". The `thrice` method didn't execute the `puts "Before 3"` expression because of the `break`.
+上述程序打印 "Before 1"和 "Before 2"。这个 `thrice` 方法没有执行到 `puts "Before 3"`，因为 `break`让它早早地退出了。
 
-`break` can also accept arguments: these become the method's return value. For example:
+`break` 也可以接受参数，它将成为该方法的返回值。例如：
 
 ```crystal
 def twice
@@ -288,10 +287,9 @@ twice { |i| i + 1 } #=> 3
 twice { |i| break "hello" } #=> "hello"
 ```
 
-The first call's value is 3 because the last expression of the `twice` method is `yield`, which gets the value of the block. The second call's value is "hello" because a `break` was performed.
+第一次方法调用的值是 3 ，因为 `twice`方法的最后一个表达式是 `yield`，它又从块中获得值。第二次调用的值是 "hello"，因为 `break`被执行了，它的参数成了返回值。
 
-If there are conditional breaks, the call's return value type will be a union of the type of the block's value and the type of the many `break`s:
-
+如果break在条件内，那么这个调用的返回类型会是块中所有可能返回的地方——比如`break`和最后一个表达式——的值类型的联合：
 ```crystal
 value = twice do |i|
   if i == 1
@@ -302,14 +300,14 @@ end
 value #:: Int32 | String
 ```
 
-If a `break` receives many arguments, they are automatically transformed to a [Tuple](http://crystal-lang.org/api/Tuple.html):
+如果`break` 接受了多个参数，那么它们自动组成一个 [元组](http://crystal-lang.org/api/Tuple.html):
 
 ```crystal
 values = twice { break 1, 2 }
 values #=> {1, 2}
 ```
 
-If a `break` receives no arguments, it's the same as receiving a single `nil` argument:
+如果`break` 没有收到参数，那么等同于接受一个 `nil`：
 
 ```crystal
 value = twice { break }
@@ -318,7 +316,7 @@ value #=> nil
 
 ## next
 
-The `next` expression inside a block exits early from the block (not the method). For example:
+`next`表达式可以提前结束这个块 (而不是整个方法)。例如：
 
 ```crystal
 def twice
@@ -335,12 +333,12 @@ twice do |i|
   puts "Got #{i}"
 end
 
-# Ouptut:
+# 输出:
 # Skipping 1
 # Got 2
 ```
 
-The `next` expression accepts arguments, and these give the value of the `yield` expression that invoked the block:
+`next` 表达式接收参数，这会传给`yield`的调用者：
 
 ```crystal
 def twice
@@ -359,16 +357,16 @@ twice do |i|
   i + 1
 end
 
-# Output
+# 输出
 # 10
 # 3
 ```
 
-If a `next` receives many arguments, they are automaticaly transformed to a [Tuple](http://crystal-lang.org/api/Tuple.html). If it receives no arguments it's the same as receiving a single `nil` argument.
+如果 `next`接收了多个参数，它们会自动组成一个 [元组](http://crystal-lang.org/api/Tuple.html)。如果没有接收到值，那么等同于接受一个 `nil` 参数。
 
 ## with ... yield
 
-A `yield` expression can be modified, using the `with` keyword, to specify an object to use as the default receiver of method calls within the block:
+`yield`表达式可以用 `with` 关键字指定块中方法调用的接收者：
 
 ```crystal
 class Foo
@@ -393,9 +391,9 @@ Foo.new.yield_with_self { one } # => 1
 Foo.new.yield_normally { one }  # => "one"
 ```
 
-## Unpacking block arguments
+## 块参数解包
 
-A block argument can specify sub-arguments enclosed in parentheses:
+声明绿参数时可以用括号指定子参数：
 
 ```crystal
 array = [{1, "one"}, {2, "two"}]
@@ -404,7 +402,7 @@ array.each do |(number, word)|
 end
 ```
 
-The above is simply syntax sugar of this:
+这是下面这种写法的语法糖：
 
 ```crystal
 array = [{1, "one"}, {2, "two"}]
@@ -415,11 +413,11 @@ array.each do |arg|
 end
 ```
 
-That means that any type that responds to `[]` with integers can be unpacked in a block argument.
+这也意味着任何可以以整数为参数响应 `[]` 方法的对象都可以在这里解包。
 
-## Performance
+## 性能
 
-When using blocks with `yield`, the blocks are **always** inlined: no closures, calls or function pointers are involved. This means that this:
+当以 `yield`使用块时，这个块 **总是** 被内联：不会涉及闭包，调用，或是函数指针。这意味着：
 
 ```crystal
 def twice
@@ -432,7 +430,7 @@ twice do |i|
 end
 ```
 
-is exactly the same as writing this:
+等同于写：
 
 ```crystal
 i = 1
@@ -441,7 +439,7 @@ i = 2
 puts "Got: #{i}"
 ```
 
-For example, the standard library includes a `times` method on integers, allowing you to write:
+例如，标准库对整数添加了 `times` 方法，你可以写：
 
 ```crystal
 3.times do |i|
@@ -449,9 +447,9 @@ For example, the standard library includes a `times` method on integers, allowin
 end
 ```
 
-This looks very fancy, but is it as fast as a C for loop? The answer is: yes!
+这看起来非常花哨，但是它确实和C的循环一样快，真的。
 
-This is `Int#times` definition:
+这是 `Int#times` 的定义：
 
 ```crystal
 struct Int
@@ -465,7 +463,7 @@ struct Int
 end
 ```
 
-Because a non-captured block is always inlined, the above method invocation is **exactly the same** as writing this:
+因为没有被捕获的块总是被内联，上面的方法调用 **等同于** 写：
 
 ```crystal
 i = 0
@@ -475,4 +473,4 @@ while i < 3
 end
 ```
 
-Have no fear using blocks for readability or code reuse, it won't affect the resulting executable performance.
+使用块不用担心它的性能问题，但确实能提升代码可读性和重用性。
