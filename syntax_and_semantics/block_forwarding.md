@@ -1,6 +1,6 @@
-# Block forwarding
+# 传递块
 
-To forward captured blocks, you use a block argument, prefixing an expression with `&`:
+为了把代码块传给其他方法，你应当注明块参数，在其前面加 `&`：
 
 ```crystal
 def capture(&block)
@@ -12,16 +12,16 @@ def invoke(&block)
 end
 
 proc = capture { puts "Hello" }
-invoke(&proc) # prints "Hello"
+invoke(&proc) # 打印 "Hello"
 ```
 
-In the above example, `invoke` receives a block. We can't pass `proc` directly to it because `invoke` doesn't receive regular arguments, just a block argument. We use `&` to specify that we really want to pass `proc` as the block argument. Otherwise:
+上例中， `invoke` 接收块，我们不能把闭包直接传进它，因为它不接受一般的参数，只接受块参数。我们用 `&` 指定“我们真的要把 `proc`当做块参数传进去”，否则会：
 
 ```crystal
-invoke(proc) # Error: wrong number of arguments for 'invoke' (1 for 0)
+invoke(proc) # 错误: 'invoke' 参数数量匹配 (给出 1, 应有 0)
 ```
 
-You can actually pass a proc to a method that yields:
+你可以把闭包传给使用 yield 的方法：
 
 ```crystal
 def capture(&block)
@@ -37,7 +37,7 @@ proc = capture { puts "Hello" }
 twice &proc
 ```
 
-The above is simply rewritten to:
+上述等同于：
 
 ```crystal
 proc = capture { puts "Hello" }
@@ -46,7 +46,7 @@ twice do
 end
 ```
 
-Or, combining the `&` and `->` syntaxes:
+或者，结合 `&` 和 `->` 的句法：
 
 ```crystal
 twice &->{ puts "Hello" }
@@ -62,9 +62,9 @@ end
 twice &->say_hello
 ```
 
-## Forwarding non-captured blocks
+## 传递非捕获的块
 
-To forward non-captured blocks, you must use `yield`:
+要传递非捕获的块，你必须用 `yield`：
 
 ```crystal
 def foo
@@ -83,7 +83,7 @@ wrap_foo do |i|
   puts i
 end
 
-# Output:
+# 输出:
 # Before foo
 # 1
 # After foo

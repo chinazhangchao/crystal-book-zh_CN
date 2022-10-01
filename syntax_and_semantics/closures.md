@@ -1,6 +1,6 @@
-# 闭包(Closures)
+# 闭包及其环境变量 (Closures)
 
-闭包把块,Captured blocks and proc literals closure local variables and `self`. This is better understood with an example:
+捕获的块会和闭包字面量会把局部变量和 `self` 包含在自身环境内。举例子比较好理解：
 
 ```crystal
 x = 0
@@ -10,7 +10,7 @@ proc.call #=> 2
 x         #=> 2
 ```
 
-Or with a proc returned from a method:
+或者是从方法中返回的闭包：
 
 ```crystal
 def counter
@@ -23,11 +23,11 @@ proc.call #=> 1
 proc.call #=> 2
 ```
 
-In the above example, even though `x` is a local variable, it was captured by the proc literal. In this case the compiler allocates `x` on the heap and uses it as the context data of the proc to make it work, because normally local variables live in the stack and are gone after a method returns.
+上例中，即使 `x`是局部变量，他也会被闭包捕获。这种情况编译器会把 `x`分配在堆上，用作闭包的环境信息。因为普通的局部变量分配在栈上，方法返回时它们就消失了。
 
 ## Type of closured variables
 
-The compiler is usually moderately smart about the type of local variables. For example:
+编译器处理一般的局部变量是比较聪明的。例如：
 
 ```crystal
 def foo
@@ -41,9 +41,9 @@ end
 x # : Int32 | String
 ```
 
-The compiler knows that after the block, `x` can be Int32 or String (it could know that it will always be String because the method always yields; this may improve in the future).
+编译器知道，在这个块执行之后， `x` 可以是 Int32 或 String (它本可以知道这一定是 String，因为这个方法总是执行传进来的块。 这个推断以后还能更精准)。
 
-If `x` is assigned something else after the block, the compiler knows the type changed:
+如果 `x` 被赋值成其他的变量，编译器会知道它被改变了：
 
 ```crystal
 x = 1
@@ -56,7 +56,7 @@ x = 'a'
 x # : Char
 ```
 
-However, if `x` is closured by a proc, the type is always the mixed type of all assignments to it:
+然而，如果 `x` 被一个闭包捕获，它的类型就一定是所有赋值给它的类型之并：
 
 ```crystal
 def capture(&block)
@@ -70,9 +70,9 @@ x = 'a'
 x # : Int32 | String | Char
 ```
 
-This is because the captured block could have been potentially stored in a class or instance variable and invoked in a separate thread in between the instructions. The compiler doesn't do an exhaustive analysis of this: it just assumes that if a variable is captured by a proc, the time of that proc invocation is unknown.
+这是因为捕获的块可能被存在类或是成员变量中，然后按照某个指令被另一个线程调用。编译器不会再穷尽分析下去，它只会认为如果一个变量被闭包捕获，比宝贝执行的时间就不确定。
 
-This also happens with regular proc literals, even if it's evident that the proc wasn't invoked or stored:
+这也适用于常规的闭包字面量，即使这个闭包显然不会被储存或调用：
 
 ```crystal
 def capture(&block)
