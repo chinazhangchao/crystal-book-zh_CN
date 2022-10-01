@@ -1,23 +1,23 @@
-# Type grammar
+# 类型语法
 
-When:
+当：
 
-* specifying [type restrictions](type_restrictions.html)
-* specifying [type arguments](generics.html)
-* [declaring variables](declare_var.html)
-* declaring [aliases](alias.html)
-* declaring [typedefs](c_bindings/type.html)
-* the argument of an [is_a?](is_a.html) pseudo-call
-* the argument of an [as](as.html) expression
-* the argument of a [sizeof](sizeof.html) expression
-* the argument of an [instance_sizeof](instance_sizeof.html) expression
-* a method's [return type](return_types.html)
+* 指定 [类型限制](type_restrictions.html)
+* 指定 [类型参数](generics.html)
+* [声明变量](declare_var.html)
+* 声明 [别名](alias.html)
+* 声明 [C typedef](c_bindings/type.html)
+* [is_a?](is_a.html) 伪方法的参数
+* [as](as.html) 表达式的参数
+* [sizeof](sizeof.html)表达式的参数
+* [instance_sizeof](instance_sizeof.html) 表达式的参数
+* 方法的 [返回类型](return_types.html)
 
-a convenient syntax is provided for some common types. These are especially useful when writing [C bindings](c_bindings/index.html), but can be used in any of the above locations.
+对于常见的类型，我们提供了一些便捷语法。这在写 [C 绑定](c_bindings/index.html)时尤其有用，但是可以用于任何的这些地方。
 
 ## Paths and generics
 
-Regular types and generics can be used:
+常规类型和泛型都可以用：
 
 ```crystal
 Int32
@@ -25,57 +25,57 @@ My::Nested::Type
 Array(String)
 ```
 
-## Union
+## 联合类型
 
 ```crystal
 alias Int32OrString = Int32 | String
 ```
 
-The pipe (`|`) in types creates a union type. `Int32 | String` is read "Int32 or String". In regular code, `Int32 | String` means invoking the method `|` on `Int32` with `String` as an argument.
+类型之间的管道符 (`|`) 创建了一个联合类型。 `Int32 | String` 读作 "Int32 或 String"。通常代码中， `Int32 | String` 意思是以`String`为参数，调用 `Int32` 的`|` 方法。
 
-## Nilable
+## 可空类型
 
 ```crystal
 alias Int32OrNil = Int32?
 ```
 
-is the same as:
+等同于:
 
 ```crystal
 alias Int32OrNil = Int32 | ::Nil
 ```
 
-In regular code, `Int32?` is a syntax error.
+通常代码中， `Int32?` 是语法错误。
 
-## Pointer
+## 指针
 
 ```crystal
 alias Int32Ptr = Int32*
 ```
 
-is the same as:
+等同于:
 
 ```crystal
 alias Int32Ptr = Pointer(Int32)
 ```
 
-In regular code, `Int32*` means invoking the `*` method on `Int32`.
+通常代码中，`Int32*` 意味着调用 `Int32`的 `*`方法。
 
-## StaticArray
+## 静态数组
 
 ```crystal
 alias Int32_8 = Int32[8]
 ```
 
-is the same as:
+等同于：
 
 ```crystal
 alias Int32_8 = StaticArray(Int32, 8)
 ```
 
-In regular code, `Int32[8]` means invoking the `[]` method on `Int32` with `8` as an argument.
+通常代码中， `Int32[8]` 意味着以`8`为参数调用`Int32` 的 `[]`方法。
 
-## Tuple
+## 元组
 
 ```crystal
 alias Int32StringTuple = {Int32, String}
@@ -87,63 +87,63 @@ is the same as:
 alias Int32StringTuple = Tuple(Int32, String)
 ```
 
-In regular code, `{Int32, String}` is a tuple instance containing `Int32` and `String` as its elements. This is different than the above tuple **type**.
+通常代码中， `{Int32, String}` 是一个元组**实例**，包含 `Int32` 和 `String` 两个元素。这不同于上面的元组 **类型**。
 
-## NamedTuple
+## 命名元组
 
 ```crystal
 alias Int32StringNamedTuple = {x: Int32, y: String}
 ```
 
-is the same as:
+等同于
 
 ```crystal
 alias Int32StringNamedTuple = NamedTuple(x: Int32, y: String)
 ```
 
-In regular code, `{x: Int32, y: String}` is a named tuple instance containing `Int32` and `String` for `x` and `y`. This is different than the above named tuple **type**.
+通常代码中， `{x: Int32, y: String}` 是命名元组**实例**，把 `x`对应到`Int32`  , `y`对应到 `String` 。 这不同于上面的命名元组 **类型**。
 
-## Proc
+## 闭包
 
 ```crystal
 alias Int32ToString = Int32 -> String
 ```
 
-is the same as:
+等同于
 
 ```crystal
 alias Int32ToString = Proc(Int32, String)
 ```
 
-To specify a Proc without arguments:
+声明一个无参数的闭包：
 
 ```crystal
 alias ProcThatReturnsInt32 = -> Int32
 ```
 
-To specify multiple arguments:
+指定多个闭包参数：
 
 ```crystal
 alias Int32AndCharToString = Int32, Char -> String
 ```
 
-For nested procs (and any type, in general), you can use parentheses:
+对于嵌套的闭包，可以用括号来分别层次，这不限于括号，适用于任何类型：
 
 ```crystal
 alias ComplexProc = (Int32 -> Int32) -> String
 ```
 
-In regular code `Int32 -> String` is a syntax error.
+通常代码中， `Int32 -> String`是语法错误。
 
 ## self
 
-`self` can be used in the type grammar to denote a `self` type. Refer to the [type restrictions](type_restrictions.html) section.
+`self` 可以用作类型，表示 `self`的类型。详见 [类型限制](type_restrictions.html)一章。
 
 ## class
 
-`class` is used to refer to a class type, instead of an instance type.
+`class` 用于指定*类* 类型，而不是实例类型。
 
-For example:
+例如：
 
 ```crystal
 def foo(x : Int32)
@@ -158,7 +158,7 @@ foo 1     # "instance"
 foo Int32 # "class"
 ```
 
-`class` is also useful for creating arrays and collections of class type:
+`class` 也用于创建包含类类型的数组：
 
 ```crystal
 class Parent
@@ -175,23 +175,23 @@ ary << Child1
 ary << Child2
 ```
 
-## Underscore
+## 下划线
 
-An underscore is allowed in type restrictions. It matches anything:
+下划线用于类型限制时，表示“任何类型：
 
 ```crystal
-# Same as not specifying a restriction, not very useful
+# 等同于不写类型限制，用处不大
 def foo(x : _)
 end
 
-# A bit more useful: any two arguments Proc that returns an Int32:
+# 有点用处: 指定输入任意两个类型，返回 Int32：
 def foo(x : _, _ -> Int32)
 end
 ```
 
 ## typeof
 
-`typeof` is allowed in the type grammar. It returns a union type of the type of the passed expressions:
+`typeof` 可以用于类型语法，表示其传入所有变量的类型之并：
 
 ```crystal
 typeof(1 + 2) # => Int32
