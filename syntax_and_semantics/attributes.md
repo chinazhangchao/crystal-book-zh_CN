@@ -1,14 +1,14 @@
-# Attributes
+# 属性
 
-Some types and methods can be annotated with attributes. The attribute list is fixed, but eventually (maybe) there will be user-defined attributes.
+一些类型和方法可以被标注属性。这些属性暂时是固定的，但是我们最终(也许)会添加用户自定义的属性。
 
 ## Link
 
-Tells the compiler how to link a C library. This is explained in the [lib](c_bindings/lib.html) section.
+指示编译器如何链接一个C库。这会在 [lib](c_bindings/lib.html)章解释。
 
 ## Extern
 
-Marking a Crystal struct with this attribute makes it possible to use it in lib declarations:
+标明某个 Crystal 结构体可以在库定义中应用：
 
 ```crystal
 @[Extern]
@@ -16,14 +16,14 @@ struct MyStruct
 end
 
 lib MyLib
-  fun my_func(s : MyStruct) # OK (gives an error without the Extern attribute)
+  fun my_func(s : MyStruct) # OK (如果没有 Extern 属性，就会报错)
 end
 ```
 
-You can also make a struct behave like a C union (this can be pretty unsafe):
+你也可以让结构体看起来像 C 的联合体(union) ,尽管这个真的不安全：
 
 ```crystal
-# A struct to easily convert between Int32 codepoints and Chars
+# 一个结构体，来简单地在 Int32 码点和 Char 之间做转化。
 @[Extern(union: true)]
 struct Int32OrChar
   property int = 0
@@ -40,26 +40,25 @@ s.char # => 'B'
 
 ## ThreadLocal
 
-The `@[ThreadLocal]` attribute can be applied to class variables and C external variables. It makes them be thread local.
+`@[ThreadLocal]`属性可以加给类变量和外部C变量。这会让他们变成线程局部变量。
 
 ```crystal
 class DontUseThis
-  # One for each thread
+  # 每个线程分别有一份
   @[ThreadLocal]
   @@values = [] of Int32
 end
 ```
 
-ThreadLocal is used in the standard library to implement the runtime and shouldn't be
-needed or used outside it.
+线程局部变量在标准库中使用，用于实现运行时。此外它不应该被用到。
 
 ## Packed
 
-Marks a [C struct](c_bindings/struct.html) as packed, which prevents the automatic insertion of padding bytes between fields. This is typically only needed if the C library explicitly uses packed structs.
+标志一个 [C 结构体](c_bindings/struct.html) 是紧密的，这样结构体的域之间就不会被填充用于对齐的字节。这个当C结构体显式地要求紧密结构体时使用。 
 
 ## AlwaysInline
 
-Gives a hint to the compiler to always inline a method:
+提示编译器总是内联该方法：
 
 ```crystal
 @[AlwaysInline]
@@ -70,7 +69,7 @@ end
 
 ## NoInline
 
-Tells the compiler to never inline a method call. This has no effect if the method yields, since functions which yield are always inlined.
+指示编译器不要内联一个方法调用。这不适用于带有`yield`的方法,因为它们总是被内联。
 
 ```crystal
 @[NoInline]
@@ -81,15 +80,15 @@ end
 
 ## ReturnsTwice
 
-Marks a method or [lib fun](c_bindings/fun.html) as returning twice. The C `setjmp` is an example of such a function.
+标志一个方法或 [C库函数](c_bindings/fun.html) 返回两次。 C 的 `setjmp` 是这种函数的一个例子。
 
 ## Raises
 
-Marks a method or [lib fun](c_bindings/fun.html) as potentially raising an exception. This is explained in the [callbacks](c_bindings/callbacks.html) section.
+标志一个方法或[C库函数](c_bindings/fun.html)可能扔出一个异常。这在 [C 回调函数](c_bindings/callbacks.html)一章有解释。
 
 ## CallConvention
 
-Indicates the call convention of a [lib fun](c_bindings/fun.html). For example:
+指示 [C库函数](c_bindings/fun.html)的调用约定。例如：
 
 ```crystal
 lib LibFoo
@@ -98,9 +97,9 @@ lib LibFoo
 end
 ```
 
-The list of valid call conventions is:
+目前可用的调用约定有：
 
-* C (the default)
+* C (默认值)
 * Fast
 * Cold
 * WebKit_JS
@@ -108,8 +107,8 @@ The list of valid call conventions is:
 * X86_StdCall
 * X86_FastCall
 
-They are explained [here](http://llvm.org/docs/LangRef.html#calling-conventions).
+它们在[这里](http://llvm.org/docs/LangRef.html#calling-conventions)有解释。
 
 ## Flags
 
-Marks an [enum](enum.html) as a "flags enum", which changes the behaviour of some of its methods, like `to_s`.
+标志一个[枚举](enum.html) 是 "位枚举"，这会改变一些方法的行为，如 `to_s`。
