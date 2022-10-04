@@ -1,31 +1,30 @@
-# Documenting code
+# 代码注释
 
-Crystal documentation comments use a subset of [Markdown](https://daringfireball.net/projects/markdown/).
+Crystal 文档注释使用[Markdown](https://daringfireball.net/projects/markdown/)的子集。
 
-* Documentation should be positioned right above definitions of classes, modules, and methods. Leave no blanks between them.
+* 文档应当放在类，模块，方法的正上方，中间不留空格。
 
 ```crystal
-# A unicorn is a **legendary animal** (see the `Legendary` module) that has been
-# described since antiquity as a beast with a large, spiraling horn projecting
-# from its forehead.
+# 独角兽是一种 **传奇生物** (见 `Legendary`模块) 
+# 古籍中记载它们额头长有大而尖的角。
 class Unicorn
 end
 
-# Bad: This is not attached to any class.
+# 不好: 这没有附加到任何类之上。
 
 class Legendary
 end
 ```
 
-* The documentation of a method is included into the method summary and the method details. The former includes only the first line, the latter includes the entire documentation. In short, it is preferred to:
+* 方法的文档应当包含方法概述和方法细节两部分。概述只包含第一行，后者包含整个文档注释。推荐的写法是：
 
-  1. State a method's purpose or functionality in the first line.
-  2. Supplement it with details and usages after that.
+  1. 第一行解释方法的意图和功能。
+  2. 后接它的细节和用处。
 
-For instance:
+例如：
 
 ``````crystal
-# Returns the number of horns this unicorn has.
+# 返回独角兽角的数量。
 #
 # ```
 # Unicorn.new.horns # => 1
@@ -35,18 +34,19 @@ def horns
 end
 ``````
 
-* Use the third person: `Returns the number of horns this unicorn has` instead of `Return the number of horns this unicorn has`.
+* 使用第三人称: `Returns the number of horns this unicorn has` instead of `Return the number of horns this unicorn has`。
+> 译注： 汉语没有第三人称相关的变格法，不过我们仍应当用客观的视角描述对象。我们说`返回独角兽角的数量`就可以了。
 
-* Parameter names should be *italicized* (surrounded with single asterisks `*` or underscores `_`):
+* 参数应当为 *斜体* (用单星号 `*` 或下划线 `_`包围)：
 
 ```crystal
-# Creates a unicorn with the specified number of *horns*.
+# 创建独角兽，用 *horns* 指定角的数量。
 def initialize(@horns = 1)
   raise "Not a unicorn" if @horns != 1
 end
 ```
 
-* Code blocks that have Crystal code can be surrounded with triple backticks or indented with four spaces.
+* Crystal 代码块应当用三个反引号`` ``` `` 包括，或是用四空格缩进。
 
 ``````crystal
 # ```
@@ -55,14 +55,14 @@ end
 # ```
 ``````
 
-or
+或
 
 ```crystal
 #     unicorn = Unicorn.new
 #     unicorn.speak
 ```
 
-* Text blocks, for example to show program output, must be surrounded with triple backticks followed by the "text" keyword.
+* 文本块必须用三反引号包括，后接"text"关键字。这可以用于展示程序输出。
 
 ``````crystal
 # ```text
@@ -70,31 +70,31 @@ or
 # ```
 ``````
 
-* To automatically link to other types, enclose them with single backticks.
+* 用单反引号包含其他类型，可以自动引用到该类型。
 
 ```crystal
-# the `Legendary` module
+# `Legendary` 模块
 ```
 
-* To automatically link to methods of the currently documented type, use a hash like `#horns` or `#index(char)`, and enclose it with single backticks.
+* 用井号接方法名来自动链接到当前类型的方法，并用单反引号包括起来。如 `#horns` 或 `#index(char)`。
 
-* To automatically link to methods in other types, do `OtherType#method(arg1, arg2)` or just `OtherType#method`, and enclose it with single backticks.
+* 用 `OtherType#method(arg1, arg2)` 或 `OtherType#method`的写法来自动链接到其他类型的方法，同样地，用单反引号包括起来。
 
-For example:
+例如：
 
 ```crystal
-# Check the number of horns with `#horns`.
-# See what a unicorn would say with `Unicorn#speak`.
+# 用 `#horns`检查角的数量
+# 用 `Unicorn#speak`显示独角兽会说什么。
 ```
 
-* To show the value of an expression inside code blocks, use `# =>`.
+* 用 `# =>`指示代码框中表达式的值。
 
 ```crystal
 1 + 2             # => 3
 Unicorn.new.speak # => "I'm a unicorn"
 ```
 
-* Use `ditto` to use the same comment as in the previous declaration.
+* 用 `ditto` 表示和上一个注释相同的内容。
 
 ```crystal
 # ditto
@@ -103,7 +103,7 @@ def number_of_horns
 end
 ```
 
-* Use `:nodoc:` to hide public declarations from the generated documentation. Private and protected methods are always hidden.
+* 用 `:nodoc:` 隐藏它的文档。私有和保护变量总是被隐藏。
 
 ```crystal
 class Unicorn
@@ -113,11 +113,11 @@ class Unicorn
 end
 ```
 
-### Flagging Classes, Modules, and Methods
+### 给类，模块，方法做标志
 
-Given a valid keyword, Crystal will automatically generate visual flags that help highlight problems, notes and/or possible issues.
+给出一个有效的关键字， Crystal 就会自动的创建可视化标签，以帮助显示问题和特殊事件。
 
-The supported flag keywords are:
+目前支持的标志有：
 
 - BUG
 - DEPRECATED
@@ -126,82 +126,77 @@ The supported flag keywords are:
 - OPTIMIZE
 - TODO
 
-Flag keywords must be the first word in their respective line and must be in all caps. An optional trailing colon is preferred for readability.
+标志关键字必须是它们所在行的第一个词，且必须为全大写。为增强可读性，后面可以接一个冒号。
 
 ``````crystal
-# Makes the unicorn speak to STDOUT
+# 让独角兽向 STDOUT 讲话
 #
-# NOTE: Although unicorns don't normally talk, this one is special
-# TODO: Check if unicorn is asleep and raise exception if not able to speak
-# TODO: Create another `speak` method that takes and prints a string
+# NOTE: 虽然独角兽平时不说话，但这只是特殊的。
+# TODO: 检查它是否在睡觉。如果它不能说话，就抛出异常。
+# TODO: 造另外一个 `speak`方法，接受并打印一个字符串。
 def speak
   puts "I'm a unicorn"
 end
 
-# Makes the unicorn talk to STDOUT
+# 让独角兽对 STDOUT 讲话
 #
-# DEPRECATED: Use `speak`
+# DEPRECATED: 请改用 `speak`
 def talk
   puts "I'm a unicorn"
 end
 ``````
 
-### Use Crystal's code formatter
+### 使用 Crystal 的代码格式化器
 
-Crystal's built-in code formatter can be used not just to format your code,
-but also to format code samples included in documentation blocks.
+Crystal 有内置的格式化器，它不只能格式化你自己的代码，还能格式化文档代码块中的代码样例。
 
-This is done automatically when `crystal tool format` is invoked, which
-will automatically format all `.cr` files in current directory.
+这会在 `crystal tool format`被调用的时候自动执行。它默认会格式化当前文件夹里所有的 `.cr` 文档。
 
-To format a single file:
+格式化单个文档：
 
 ```
 $ crystal tool format file.cr
 ```
 
-To format all `.cr` files within a directory:
+格式化某个目录下的 `.cr` 文档：
 
 ```
 $ crystal tool format src/
 ```
 
-Use this tool to unify code styles and to submit documentation improvements to
-Crystal itself.
+用这个工具可以同一代码风格，也可以给Crystal自己的库函数补充文档。
 
-The formatter is also fast, so very little time is lost if you format the
-entire project instead of a single file.
+这个格式化器相当快，所以一次格式化一整个项目也不费多少时间。
 
-### A Complete Example
+### 完整的例子
 
 ``````crystal
-# A unicorn is a **legendary animal** (see the `Legendary` module) that has been
-# described since antiquity as a beast with a large, spiraling horn projecting
-# from its forehead.
+# 独角兽是一种 **传奇生物** (见 `Legendary`模块) 
+# 古籍中记载它们额头长有大而尖的角。
 #
-# To create a unicorn:
+# 创建一只独角兽:
 #
 # ```
 # unicorn = Unicorn.new
 # unicorn.speak
 # ```
 #
-# The above produces:
+# 上式会产生:
 #
 # ```text
 # "I'm a unicorn"
 # ```
 #
-# Check the number of horns with `#horns`.
+# 用 `#horns`检查它角的数量。
 class Unicorn
   include Legendary
 
-  # Creates a unicorn with the specified number of *horns*.
+  # 创建独角兽，用 *horns*指定角的数量
   def initialize(@horns = 1)
     raise "Not a unicorn" if @horns != 1
   end
 
-  # Returns the number of horns this unicorn has
+  # 返回独角兽角的数量
   #
   # ```
   # Unicorn.new.horns # => 1
@@ -215,7 +210,7 @@ class Unicorn
     horns
   end
 
-  # Makes the unicorn speak to STDOUT
+  # 让独角兽对 STDOUT 说话
   def speak
     puts "I'm a unicorn"
   end
@@ -226,6 +221,6 @@ class Unicorn
 end
 ``````
 
-### Generate Documentation
+### 创建文档
 
-To generate documentation for a project, invoke `crystal docs`. This will create a `docs` directory, with a `docs/index.html` entry point. All files inside the root `src` directory will be considered.
+为了给某个项目创建文档，只需要调用 `crystal docs`。这会在 `docs`目录创建一个静态网页形式的文档，以 `docs/index.html`作为入口点。所有 `src`目录下的代码都会被考虑。
