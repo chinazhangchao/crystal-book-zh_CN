@@ -1,28 +1,26 @@
 # typeof
 
-The `typeof` expression returns the type of an expression:
+`typeof`表达式返回原表达式的类型：
 
 ```crystal
 a = 1
 b = typeof(a) #=> Int32
 ```
 
-It accepts multiple arguments, and the result is the union of the expression types:
+它接受多个参数，返回的结果是这些参数类型的并：
 
 ```crystal
 typeof(1, "a", 'a') #=> (Int32 | String | Char)
 ```
 
-It is often used in generic code, to make use of the compiler's type inference capabilities:
+这常用于泛型代码，来利用编译器的类型推导功能：
 
 ```crystal
 hash = {} of Int32 => String
 another_hash = typeof(hash).new #:: Hash(Int32, String)
 ```
 
-Since `typeof` doesn't actually evaluate the expression, it can be
-used on methods at compile time, such as in this example, which
-recursively forms a union type out of nested type parameters:
+因为`typeof` 并不事实上对参数表达式求值，它可以用于编译时的方法。在这个例子中，它被用于从嵌套的类型参数中递归地构建出一个联合类型：
 
 ```crystal
 class Array
@@ -41,4 +39,4 @@ typeof(nest) #=> Array(Int32 | Array(String | Array(Symbol | Array(Char))))
 typeof(flat) #=> Array(String | Int32 | Symbol | Char)
 ```
 
-This expression is also available in the [type grammar](type_grammar.html).
+这个表达式也可用于[类型语法](type_grammar.html)。

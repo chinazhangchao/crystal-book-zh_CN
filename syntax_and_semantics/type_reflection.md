@@ -1,3 +1,3 @@
-# Type reflection
+# 类型反射
 
-Crystal provides basic methods to do type reflection, casting and introspection.
+Crystal 对类型反射,转换和内省提供了基本的方法：

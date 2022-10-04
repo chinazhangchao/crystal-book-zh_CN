@@ -1,6 +1,6 @@
 # responds_to?
 
-The pseudo-method `responds_to?` determines whether a type has a method with the given name. For example:
+伪方法 `responds_to?` 确定一个类型是否响应某个方法。例如：
 
 ```crystal
 a = 1
@@ -8,4 +8,4 @@ a.responds_to?(:abs)    #=> true
 a.responds_to?(:size) #=> false
 ```
 
-It is a pseudo-method because it only accepts a symbol literal as its argument, and is also treated specially by the compiler, as explained in [if var.responds_to?(...)](if_varresponds_to.html).
+它是伪方法，因为它只接受符号字面量，并且别编译器特殊对待，见 [if var.responds_to?(...)](if_varresponds_to.html)。
