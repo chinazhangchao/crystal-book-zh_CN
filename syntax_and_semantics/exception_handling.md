@@ -1,23 +1,24 @@
-# Exception handling
+# 异常处理
 
-Crystal's way to do error handling is by raising and rescuing exceptions.
+Crystal处理错误的一般方法就是通过抛出和处理异常。
 
-## Raising exception
 
-You raise exceptions by invoking a top-level `raise` method. Unlike other keywords, `raise` is a regular method with two overloads: [one accepting a String](http://crystal-lang.org/api/toplevel.html#raise%28message%20%3A%20String%29-class-method) and another [accepting an Exception instance](http://crystal-lang.org/api/toplevel.html#raise%28ex%20%3A%20Exception%29-class-method):
+## 抛出异常
+
+你通过调用顶层的 `raise` 方法来抛出异常。 `raise`不是关键字，而只是正常的方法。它有两个重载，一个接受 [字符串](http://crystal-lang.org/api/toplevel.html#raise%28message%20%3A%20String%29-class-method) ，另一个接受 [ Exception 实例](http://crystal-lang.org/api/toplevel.html#raise%28ex%20%3A%20Exception%29-class-method)：
 
 ```crystal
 raise "OH NO!"
 raise Exception.new("Some error")
 ```
 
-The String version just creates a new [Exception](http://crystal-lang.org/api/Exception.html) instance with that message.
+字符串版本只是用它的消息创建了一个新的 [Exception](http://crystal-lang.org/api/Exception.html) 实例。
 
-Only `Exception` instances or subclasses can be raised.
+只有 `Exception`及其子类的实例可以被抛出。
 
-## Defining custom exceptions
+## 自定义异常
 
-To define a custom exception type, just subclass from [Exception](http://crystal-lang.org/api/Exception.html):
+你可以让你的类继承 [Exception](http://crystal-lang.org/api/Exception.html)，这样它就会被视为一个异常：
 
 ```crystal
 class MyException < Exception
@@ -27,11 +28,11 @@ class MyOtherException < Exception
 end
 ```
 
-You can, as always, define a constructor for your exception or just use the default one.
+你可以，并且总是可以，给你的异常定义构造函数，或使用默认的那个。
 
-## Rescuing exceptions
+## 抢救异常
 
-To rescue any exception use a `begin ... rescue ... end` expression:
+用 `begin ... rescue ... end` 表达式抢救异常：
 
 ```crystal
 begin
@@ -40,10 +41,10 @@ rescue
   puts "Rescued!"
 end
 
-# Output: Rescued!
+# 输出: Rescued!
 ```
 
-To access the rescued exception you can specify a variable in the `rescue` clause:
+在 `rescue`子句中添加变量，以获取抛出的异常:
 
 ```crystal
 begin
@@ -52,78 +53,78 @@ rescue ex
   puts ex.message
 end
 
-# Output: OH NO!
+# 输出: OH NO!
 ```
 
-To rescue just one type of exception (or any of its subclasses):
+抢救某一类型的异常 (或它的任意子类)：
 
 ```crystal
 begin
   raise MyException.new("OH NO!")
 rescue MyException
-  puts "Rescued MyException"
+  puts "抢救了 MyException"
 end
 
-# Output: Rescued MyException
+# 输出: 抢救了 MyException
 ```
 
-And to access it, use a syntax similar to type restrictions:
+为了取得它的实例，你可以用类型限制的语法标注它：
 
 ```crystal
 begin
   raise MyException.new("OH NO!")
 rescue ex : MyException
-  puts "Rescued MyException: #{ex.message}"
+  puts "抢救了 MyException: #{ex.message}"
 end
 
-# Output: Rescued MyException: OH NO!
+# 输出: 抢救了 MyException: OH NO!
 ```
 
-Multiple `rescue` clauses can be specified:
+这个结构可以接多个 `rescue`子句：
 
 ```crystal
 begin
   # ...
 rescue ex1 : MyException
-  # only MyException...
+  # 只接受 MyException...
 rescue ex2 : MyOtherException
-  # only MyOtherException...
+  # 只接受 MyOtherException...
 rescue
-  # any other kind of exception
+  # 其他任意异常
 end
 ```
 
-You can also rescue multiple exception types at once by specifying a union type:
+你也可以用联合类型在一个字句中接受多个异常。
 
 ```crystal
 begin
   # ...
 rescue ex : MyException | MyOtherException
-  # only MyException or MyOtherException
+  # 接受 MyException 或 MyOtherException
 rescue
-  # any other kind of exception
+  # 其他任意异常
 end
 ```
 
 ## else
 
-An `else` clause is executed only if no exceptions were rescued:
+这个结构可以接 `else` ，它会在没有任何异常被捕获的时候被执行：
 
 ```crystal
 begin
   something_dangerous
 rescue
-  # execute this if an exception is raised
+  # 如果有异常抛出，就执行
 else
-  # execute this if an exception isn't raised
+  # 如果没有异常抛出，就执行
 end
 ```
 
-An `else` clause can only be specified if at least one `rescue` clause is specified.
+`else` 子句只能在指定了至少一个 `rescue` 子句后使用。
 
 ## ensure
 
-An `ensure` clause is executed at the end of a `begin ... end` or `begin ... rescue ... end` expression regardless of whether an exception was raised or not:
+`ensure`子句接在 `begin ... end` 或 `begin ... rescue ... end` 表达式的后方，保证它的内容被执行，不论是否有异常抛出：
 
 ```crystal
 begin
@@ -132,11 +133,11 @@ ensure
   puts "Cleanup..."
 end
 
-# Will print "Cleanup..." after invoking something_dangerous,
-# regardless of whether it raised or not
+# 会在调用 something_dangerous 之后执行 "Cleanup..." ,
+# 不论是否有异常抛出
 ```
 
-Or:
+或者：
 
 ```crystal
 begin
@@ -146,54 +147,54 @@ rescue
 else
   # ...
 ensure
-  # this will always be executed
+  # 这总是会被执行
 end
 ```
 
-`ensure` clauses are usually used for clean up, freeing resources, etc.
+`ensure` 通常用于清理现场，释放资源，等等。
 
-## Short syntax form
+## 简短格式
 
-Exception handling has a short syntax form: assume a method or block definition is an implicit `begin ... end` expression, then specify `rescue`, `else`, and `ensure` clauses:
+异常处理有一个简短的格式：所有的方法或块定义可以视为隐含着一个 `begin ... end`表达式，所以可以直接指定 `rescue`， `else`，和 `ensure` 子句：
 
 ```crystal
 def some_method
   something_dangerous
 rescue
-  # execute if an exception is raised
+  # 当有异常抛出时执行
 end
 
-# The above is the same as:
+# 上式等同于：
 def some_method
   begin
     something_dangerous
   rescue
-    # execute if an exception is raised
+    # 当有异常抛出时执行
   end
 end
 ```
 
-With `ensure`:
+加`ensure`：
 
 ```crystal
 def some_method
   something_dangerous
 ensure
-  # always execute this
+  # 总是执行
 end
 
-# The above is the same as:
+# 上式等同于:
 def some_method
   begin
     something_dangerous
   ensure
-    # always execute this
+    # 总是执行
   end
 end
 
-# Similarly, the shorthand also works with blocks:
+# 类似的，这种简便写法也适用于块：
 (1..10).each do |n|
-  # potentially dangerous operation
+  # 潜在有危险的操作
 rescue
   #..
 else
@@ -203,52 +204,51 @@ ensure
 end
 ```
 
-## Type inference
+## 类型推导
 
-Variables declared inside the `begin` part of an exception handler also get the `Nil` type when considered inside a `rescue` or `ensure` body. For example:
+`begin`中定义的变量在 `rescue` 或 `ensure`中可能是 `Nil` 类型。例如：
 
 ```crystal
 begin
   a = something_dangerous_that_returns_Int32
 ensure
-  puts a + 1 # error, undefined method '+' for Nil
+  puts a + 1 # 错误， Nil 没有定义 '+' 方法 
 end
 ```
 
-The above happens even if `something_dangerous_that_returns_Int32` never raises, or if `a` was assigned a value and then a method that potentially raises is executed:
+即使 `something_dangerous_that_returns_Int32` 从不抛异常，这个错误也会发生。或者，如果 `a` 被赋以一个变量，后面又做了可能抛异常的操作，这种错误也会发生：
 
 ```crystal
 begin
   a = 1
   something_dangerous
 ensure
-  puts a + 1 # error, undefined method '+' for Nil
+  puts a + 1 # 错误， Nil 没有定义 '+' 方法 
 end
 ```
 
-Although it is obvious that `a` will always be assigned a value, the compiler will still think `a` might never had a chance to be initialized. Even though this logic might improve in the future, right now it forces you to keep your exception handlers to their necessary minimum, making the code's intention more clear:
+即使 `a` 显然总是有被赋予一个值，编译器仍然很认为也许`a` 来不及初始化，程序就跑到了其他的地方。这种逻辑以后也许会被修复，但现在你最好把异常处理程序限制在最小的规模，这样程序的意图也会更清晰。
 
 ```crystal
-# Clearer than the above: `a` doesn't need
-# to be in the exception handling code.
+#这比上面的清晰： `a` 不需要放在异常处理代码中
 a = 1
 begin
   something_dangerous
 ensure
-  puts a + 1 # works
+  puts a + 1 # 能跑
 end
 ```
 
-## Alternative ways to do error handling
+## 错误处理的另一种方法
 
-Although exceptions are available as one of the mechanisms for handling errors, they are not your only choice. Raising an exception involves allocating memory, and executing an exception handler is generally slow.
+尽管异常是一种处理错误的方法，但它不是唯一的方法。抛出异常意味着消耗内存，执行异常处理往往会减慢程序速度。
 
-The standard library usually provides a couple of methods to accomplish something: one raises, one returns `nil`. For example:
+标准库通常提供一堆方法去做某事。出错时，它们一个抛出异常，另一个返回 `nil`。例如：
 
 ```crystal
 array = [1, 2, 3]
-array[4]  # raises because of IndexError
-array[4]? # returns nil because of index out of bounds
+array[4]  # 抛出 IndexError
+array[4]? # 返回 nil ，因为下标越界了
 ```
 
-The usual convention is to provide an alternative "question" method to signal that this variant of the method returns `nil` instead of raising. This lets the user choose whether she wants to deal with exceptions or with `nil`. Note, however, that this is not available for every method out there, as exceptions are still the preferred way because they don't pollute the code with error handling logic.
+通常的约定是，一个以问号结尾的方法会在出错时返回 `nil`，而不是抛出异常。这样用户就可以决定他是否要处理异常，或是得到一个  `nil`。然而，这不只是对所有方法都如此。毕竟，异常仍然是推荐的处理，因为它不会污染正常代码的逻辑。 
