@@ -1,3 +1,3 @@
-# Low-level primitives
+# 底层原语
 
-Some low-level primitives are provided. They are mostly useful for interfacing with C libraries and for low-level code.
+Crystal 提供了一些底层原语，它们在调用C库函数和编写底层代码时尤其有用。
