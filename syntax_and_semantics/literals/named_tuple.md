@@ -1,4 +1,4 @@
-# 命名元组(NamedTuple(
+# 命名元组(NamedTuple)
 
 [命名元组](http://crystal-lang.org/api/NamedTuple.html)往往由元组字面量产生：
 

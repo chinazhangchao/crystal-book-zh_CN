@@ -1,34 +1,35 @@
-# Cross-compilation
+# 交叉编译
 
-Crystal supports a basic form of [cross compilation](http://en.wikipedia.org/wiki/Cross_compiler).
+Crystal 支持基础形式的 [交叉编译](http://en.wikipedia.org/wiki/Cross_compiler).
 
-In order to achieve this, the compiler executable provides two flags:
+为了使用这个功能，编译器提供了两个标志：
 
-* `--cross-compile`: When given enables cross compilation mode
-* `--target`: the [LLVM Target Triple](http://llvm.org/docs/LangRef.html#target-triple) to use and set the default [compile-time flags](compile_time_flags.html) from
+* `--cross-compile`：启用交叉编译模式
+* `--target`: 设置目标的 [LLVM 目标三元组](http://llvm.org/docs/LangRef.html#target-triple)，这会改变 [编译时标志](compile_time_flags.html)的默认设置
 
-To get the `--target` flags you can execute `llvm-config --host-target` using an installed LLVM 3.5. For example on a Linux it could say "x86_64-unknown-linux-gnu".
+如果LLVM的版本在3.5及以上，你可以用 `llvm-config --host-target` 命令得到 `--target` 标志。对 linux，它可能是 "x86_64-unknown-linux-gnu"。
 
-If you need to set any compile-time flags not set implicitly through `--target`, you can use the `-D` command line flag.
+如果你需要设置`--target` 之外的标志，你可以用`-D`命令行标志进行设置。
 
-Using these two, we can compile a program in a Mac that will run on that Linux like this:
+用这两个参数，你可以在 Mac 上编译程序，然后在 Linux 上运行：
 
 ```bash
 crystal build your_program.cr --cross-compile --target "x86_64-unknown-linux-gnu"
 ```
 
-This will generate a `.o` ([Object file](http://en.wikipedia.org/wiki/Object_file)) and will print a line with a command to execute on the system we are trying to cross-compile to. For example:
+这会创建一个 `.o` ([对象文件](http://en.wikipedia.org/wiki/Object_file)) ，然后打出一个命令行，你应该在目标系统上执行它。例如：
 
 ```bash
 cc your_program.o -o your_program -lpcre -lrt -lm -lgc -lunwind
 ```
 
-You must copy this `.o` file to that system and execute those commands. Once you do this the executable will be available in that target system.
+你应当把这个 `.o` 文件复制到目标系统，然后执行这个命令。然后这个.o文件才会真正地被链接成为可执行文件。
 
-This procedure is usually done with the compiler itself to port it to new platforms where a compiler is not yet available. Because in order to compile a Crystal compiler we need an older Crystal compiler, the only two ways to generate a compiler for a system where there isn't a compiler yet are:
-* We checkout the latest version of the compiler written in Ruby, and from that compiler we compile the next versions until the current one.
-* We create a `.o` file in the target system and from that file we create a compiler.
+这个过程通常由编译器自己完成，用于把编译器移植到一个尚没有编译器的系统。编译Crystal需要一个先前的Crystal编译器，但是如果没有编译器呢？那就只有两种办法：
 
-The first alternative is long and cumbersome, while the second one is much easier.
+* 检查用 Ruby 写成的最新版本的编译器，用它编译下一个版本，下下一个版本，直到当前的版本。
+* 生成一个目标系统的 `.o` 文件，然后向目标系统链接它。
 
-Cross-compiling can be done for other executables, but its main target is the compiler. If Crystal isn't available in some system you can try cross-compiling it there.
+第一个过程又长又累人，第二个相比就比较简单了。
+
+交叉编译也可以用于其他的程序，但主要的目标是编译器。如果有些系统不支持Crystal，你就可以自己编译一个编译器出来。

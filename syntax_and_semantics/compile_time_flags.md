@@ -1,41 +1,41 @@
-# Compile-time flags
+# 编译时标记
 
-Types, methods and generally any part of your code can be conditionally defined based on some flags available at compile time. These flags are by default read from the hosts [LLVM Target Triple](http://llvm.org/docs/LangRef.html#target-triple), split on `-`. To get the target you can execute `llvm-config --host-target`.
+类型，方法，或是其他任何代码都可以依赖编译时标记给出的信息。这些标志一般从宿主的 [LLVM 目标三元组](http://llvm.org/docs/LangRef.html#target-triple)按 `-`分割而来。为了得到这些信息，你可以执行 `llvm-config --host-target`.
 
 ```bash
 $ llvm-config --host-target
 x86_64-unknown-linux-gnu
 
-# so the flags are: x86_64, unknown, linux, gnu
+# 所以这些标志是: x86_64, unknown, linux, gnu
 ```
 
-To define a flag, simply use the `--define` or `-D` option, like so:
+为了定义一个标志，只需要用 `--define` 或 `-D` 选项，例如：
 
 ```bash
 $ crystal some_program.cr -Dflag
 ```
 
-Additionally, if a program is compiled with `--release`, the `release` flag will be set.
+另外，如果程序以 `--release`编译，那也会添加 `release`标志。
 
-You can check if a flag is defined with the `flag?` macro method:
+你可以用`flag?`查看一个标志是否被定义：
 
 ```crystal
 {% if flag?(:x86_64) %}
-  # some specific code for 64 bits platforms
+  # 对 64 位平台特化的代码
 {% else %}
-  # some specific code for non-64 bits platforms
+  # 对非 64 位平台特化的代码
 {% end %}
 ```
 
-`flag?` returns a boolean, so you can use it with `&&` and `||`:
+`flag?` 返回一个布尔值，所以你可以配合 `&&` 和 `||`使用：
 
 ```crystal
 {% if flag?(:linux) && flag?(:x86_64) %}
-  # some specific code for linux 64 bits
+  # 对 64 linux 特化的代码  
 {% end %}
 ```
 
-These flags are generally used in C bindings to conditionally define types and functions. For example, the very well known `size_t` type is defined like this in Crystal:
+这些标志往往用于C绑定，以条件性地定义类型和函数。例如，著名的 `size_t`类型在 Crystal 中是这样定义的：
 
 ```crystal
 lib C

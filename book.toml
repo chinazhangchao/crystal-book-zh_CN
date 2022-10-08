@@ -1,0 +1,6 @@
+[book]
+authors = ["Crystal 翻译组"]
+language = "zn_cn"
+multilingual = false
+src = "./"
+title = "Crystal 语言参考"

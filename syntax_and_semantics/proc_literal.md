@@ -1,6 +1,6 @@
-# Proc literal
+# 闭包字面量
 
-A captured block is the same as declaring a [Proc literal](literals/proc.html) and [passing](block_forwarding.html) it to the method.
+一个捕获块等同于声明一个 [闭包字面量](literals/proc.html) ，然后把它[传递](block_forwarding.html) 给一个方法。
 
 ```crystal
 def some_proc(&block : Int32 -> Int32)
@@ -15,7 +15,7 @@ proc.call(10) #=> 11
 x #=> 11
 ```
 
-As explained in the [proc literals](literals/proc.html) section, a Proc can also be created from existing methods:
+如[闭包字面量](literals/proc.html)一篇所述，闭包也可以由已有方法构造：
 
 ```crystal
 def add(x, y)

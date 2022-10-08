@@ -1,123 +1,124 @@
-# Method arguments
+# 方法形参详述
 
-This is the formal specification of method and call arguments.
+这是方法和调用所用参数的形式规定。
 
-## Components of a method definition
+## 方法定义的组成
 
-A method definition consists of:
+一个方法定义有如下部分：
 
-* required and optional positional arguments
-* an optional splat argument, whose name can be empty
-* required and optional named arguments
-* an optional double splat argument
+* 要求和可选的位置参数
+* 可选的不定长参数(splat)，它的名字可以为空
+* 要求和可选的命名参数
+* 可选的键值对(double splat)参数
 
-For example:
+例如：
 
 ```crystal
 def foo(
-  # These are positional arguments:
+  # 这些是位置参数:
   x, y, z = 1,
-  # This is the splat argument:
+  # 这是不定长参数:
   *args,
-  # These are the named arguments:
+  # 这是命名参数:
   a, b, c = 2,
-  # This is the double splat argument:
+  # 这是键值对参数:
   **options
   )
 end
 ```
 
-Each one of them is optional, so a method can do without the double splat, without the splat, without keyword arguments and without positional arguments.
+他们每一个都是可选的，所以一个方法没有谁都可以，不论是位置参数，不定长参数，命名参数和键值对参数。
 
-## Components of a method call
+## 方法调用的组成
 
-A method call also has some parts:
+一个方法调用应当有如下部分:
 
 ```crystal
 foo(
-  # These are positional arguments
+  # 这些是位置参数
   1, 2,
-  # These are named arguments
+  # 这些是命名参数
   a: 1, b: 2
 )
 ```
 
-Additionally, a call argument can have a splat (`*`) or double splat (`**`). A splat expands a [Tuple](literals/tuple.html) into positional arguments, while a double splat expands a [NamedTuple](literals/named_tuple.html) into named arguments. Multiple argument splats and double splats are allowed.
+另外，调用参数中也可以有展开 (`*`) 或双展开 (`**`)。 展开把[元组](literals/tuple.html) 展开填充进位置参数里，双展开则把一个 [命名元组](literals/named_tuple.html) 填充进命名参数里。方法调用中可以有多个展开式。
 
-## How call arguments are matched to method arguments
+## 调用实参如何匹配到方法形参上
 
-When invoking a method, the algorithm to match call arguments to method arguments is:
+当调用一个方法时，匹配形参和实参的算法是：
 
-* First positional arguments are matched with positional method arguments. The number of these must be at least the number of positional arguments without a default value. If there's a splat method argument with a name (the case without a name is explained below), more positional arguments are allowed and they are captured as a tuple. Positional arguments never match past the splat method argument.
-* Then named arguments are matched, by name, with any argument in the method (it can be before or after the splat method argument). If an argument was already filled by a positional argument then it's an error.
-* Extra named arguments are placed in the double splat method argument, as a [NamedTuple](literals/named_tuple.html), if it exists, otherwise it's an error.
+* 首先匹配位置参数，实参的数量至少等于没有初始值的形参的数量。如果方法以具名的元组接受不定长参数(不具名的情况稍等)，那么实参可以多于形参，多出的部分会保存在那个元组之中。位置参数不会超过不定长参数的位置。
 
-When a splat method argument has no name, it means no more positional arguments can be passed, and next arguments must be passed as named arguments. For example:
+* 然后匹配命名参数，它们按名称匹配到任何地方(在不定长参数的前面和后面都可以)。如果这个参数已经被位置参数填充了，那么会产生错误。
+* 额外的命名参数会作为[命名元组](literals/named_tuple.html) 打包进键值对参数中。如果键值对参数不存在，就会产生错误。
+
+如果不定长参数没有名字，那这意味着它不再接受额外的位置参数，它之后的参数必须以命名参数的形式传递。例如：
 
 ```crystal
-# Only one positional argument allowed, y must be passed as a named argument
+# 只允许一个位置参数, y 必须按名称传递
 def foo(x, *, y)
 end
 
-foo 1 # Error, missing argument: y
-foo 1, 2 # Error: wrong number of arguments (given 2, expected 1)
+foo 1 # 错误, 缺少参数: y
+foo 1, 2 # 错误: 参数数目不对 (给出 2, 应得 1)
 foo 1, y: 10 # OK
 ```
 
-But even if a splat method argument has a name, arguments that follow it must be passed as named arguments:
+不过即使不定长参数有名字，它之后的参数也只能按名称传递(因为他把后面所有的位置参数都吸走了)：
 
 ```crystal
-# One or more positional argument allowed, y must be passed as a named argument
+# 可以允许一个或多个位置参数, 但 y 必须按名称传递
 def foo(x, *args, y)
 end
 
-foo 1 # Error, missing argument: y
-foo 1, 2 # Error: missing argument; y
-foo 1, 2, 3 # Error: missing argument: y
+foo 1 # 错误: 缺少参数: y
+foo 1, 2 # 错误: 缺少参数; y
+foo 1, 2, 3 # 错误: 缺少参数: y
 foo 1, y: 10 # OK
 foo 1, 2, 3, y: 4 # OK
 ```
 
-There's also the possibility of making a method only receive named arguments (and list them), by placing the star at the beginning:
+也可以上一个方法只接受命名参数，只要把星号放到最前面就行了：
 
 ```crystal
-# A method with two required named arguments: x and y
+# 一个方法，只接受两个命名参数: x 和 y
 def foo(*, x, y)
 end
 
-foo # Error: missing arguments: x, y
-foo x: 1 # Error: missing argument: y
+foo # 错误: 缺少参数: x, y
+foo x: 1 # 错误: 缺少参数: y
 foo x: 1, y: 2 # OK
 ```
 
-Arguments past the star can also have default values. It means: they must be passed as named arguments, but they aren't required (so: optional named arguments):
+星号后面的参数也可以有默认值。这意味着它们必须按名称传递，但不是非要给出(即：可选的命名参数)：
 
 ```crystal
-# A method with two required named arguments: x and y
+# 一个方法，接受两个命名参数: x 和 y, 其中 y 有默认值
 def foo(*, x, y = 2)
 end
 
-foo # Error: missing argument: x
-foo x: 1 # OK, y is 2
-foo x: 1, y: 3 # OK, y is 3
+foo # 错误: 缺少参数: x
+foo x: 1 # OK, y 是 2
+foo x: 1, y: 3 # OK, y 是 3
 ```
 
-Because arguments (without a default value) after the splat method argument must be passed by name, two methods with different required named arguments overload:
+因为星号后,没有初始值的命名参数必须按名称传递，所以接受不同名参数的两个同名方法是*不同*的，它们会彼此重载：
 
 ```crystal
 def foo(*, x)
-  puts "Passed with x: #{x}"
+  puts "获得 x: #{x}"
 end
 
 def foo(*, y)
-  puts "Passed with y: #{y}"
+  puts "获得 y: #{y}"
 end
 
-foo x: 1 # => Passed with x: 1
-foo y: 2 # => Passed with y: 2
+foo x: 1 # => 获得 x: 1
+foo y: 2 # => 获得 y: 2
 ```
 
-Positional arguments can always be matched by name:
+位置参数也可以按名称传递：
 
 ```crystal
 def foo(x, *, y)
@@ -127,40 +128,40 @@ foo 1, y: 2 # OK
 foo y: 2, x: 3 # OK
 ```
 
-## External names
+## 外部名称
 
-An external name can be specified for a method argument. The external name is the one used when passing an argument as a named argument, and the internal name is the one used inside the method definition:
+方法形参可以指定内部名称和外部名称。外部名称是传递参数时使用名字，而内部名称是仅在这个方法定义内使用的名字：
 
 ```crystal
 def foo(external_name internal_name)
-  # here we use internal_name
+  # 这里我们使用 internal_name
 end
 
 foo external_name: 1
 ```
 
-This covers two uses cases.
+这有两种使用场景。
 
-The first use case is using keywords as named arguments:
+第一种情况是，我们想用关键词当命名参数的名字：
 
 ```crystal
 def plan(begin begin_time, end end_time)
-  puts "Planning between #{begin_time} and #{end_time}"
+  puts "计划日程，从 #{begin_time} 到 #{end_time}"
 end
 
 plan begin: Time.now, end: 2.days.from_now
 ```
 
-The second use case is making a method argument more readable inside a method body:
+另一种情况是让方法形参在方法体内读起来更自然(相对地，外部名称就可以输起来更自然)：
 
 ```crystal
 def increment(value, by)
-  # OK, but reads odd
+  # 行, 只是读着怪
   value + by
 end
 
 def increment(value, by amount)
-  # Better
+  # 舒适
   value + amount
 end
 ```

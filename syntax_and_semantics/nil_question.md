@@ -1,6 +1,6 @@
 # nil?
 
-The pseudo-method `nil?` determines whether an expression's runtime type is `Nil`. For example:
+伪方法 `nil?` 确定一个变量的运行时类型是不是 `Nil`。例如：
 
 ```crystal
 a = 1
@@ -10,6 +10,6 @@ b = nil
 b.nil?          # => true
 ```
 
-It is a pseudo-method because the compiler knows about it and it can affect type information, as explained in [if var.nil?(...)](if_var_nil.html).
+这是个伪方法，因为编译器认识它，并且使用它会改变变量的类型信息，见 [if var.nil?(...)](if_var_nil.html)。
 
-It has the same effect as writing `is_a?(Nil)` but it's shorter and easier to read and write.
+它和 `is_a?(Nil)`效果相同，但是更短，更容易读，写。

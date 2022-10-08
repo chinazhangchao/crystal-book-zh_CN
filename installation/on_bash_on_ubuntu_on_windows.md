@@ -1,18 +1,18 @@
-# On Bash on Ubuntu on Windows
+# 在 Windows 的 Ubuntu 子系统上使用 Bash
 
-Crystal doesn't support Windows _yet_, but if you're using Windows 10 you can (experimentally) try Crystal using [Bash on Ubuntu on Windows](https://msdn.microsoft.com/en-us/commandline/wsl/about), an experimental Bash environment running on Windows. The installation instructions are the same as for [Debian/Ubuntu](on_debian_and_ubuntu.md), but there are a few rough edges to be aware of.
+Crystal *目前* 还不支持 Windows 。但是如果你在用 Windows 10，你可以 (实验性的) [在 Windows 的 Ubuntu 子系统上使用 Bash](https://msdn.microsoft.com/en-us/commandline/wsl/about)尝试Crystal。既然它也是Bash环境，系统类似于[Debian/Ubuntu](on_debian_and_ubuntu.md)，那么安装的方法也类似，只是要注意一些地方。
 
-Don't forget - **this is highly experimental**.
+别忘了，**这不过是个实验**。
 
-## Setup repository
+## 建立仓库
 
-First you have to add the repository to your APT configuration. For easy setup just run in your command line:
+首先你要在你的 APT 配置中加入仓库，简单起见你只要输入如下命令：
 
 ```
 curl -sSL https://dist.crystal-lang.org/apt/setup.sh | sudo bash
 ```
 
-That will add the signing key and the repository configuration. If you prefer to do it manually, execute the following commands:
+这会把仓库和秘钥一起加入配置。如果你要手动做这些，请输如下命令：
 
 ```
 sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 09617FD37CC06B54
@@ -20,23 +20,23 @@ echo "deb https://dist.crystal-lang.org/apt crystal main" | sudo tee /etc/apt/so
 sudo apt-get update
 ```
 
-## Dependencies
-Crystal needs a C compiler (`cc`) and linker (`ld`) to be able to compile Crystal programs - so you should install them:
+## 依赖
+Crystal 需要 C 编译器 (`cc`)和链接器 (`ld`) 来编译Crystal 程序——所以你应当安装它：
 
 ```
 sudo apt-get install clang binutils
 ```
 
-## Install
-Once the repository is configured and you have the dependencies, you're ready to install Crystal:
+## 安装
+一旦仓库建立完毕，所有依赖项已安装，你就可以安装 Crystal：
 
 ```
 sudo apt-get install crystal
 ```
 
-## Upgrade
+## 升级
 
-When a new Crystal version is released you can upgrade your system using:
+当新的 Crystal 版本发布时，你可以这样升级：
 
 ```
 sudo apt-get update

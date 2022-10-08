@@ -1,6 +1,6 @@
-# Constants
+# 常量
 
-Constants can be declared at the top level or inside other types. They must start with a capital letter:
+常量可以在顶层或是其他类型内定义，它们必须以大写字母开头：
 
 ```crystal
 PI = 3.14
@@ -13,9 +13,9 @@ PI #=> 3.14
 Earth::RADIUS #=> 6_371_000
 ```
 
-Although not enforced by the compiler, constants are usually named with all capital letters and underscores to separate words.
+虽然编译器不强制，但常量往往以全大写 + 下划线构成。
 
-A constant definition can invoke methods and have complex logic:
+常量定义中可以调用方法，也可以有复杂的逻辑：
 
 ```crystal
 TEN = begin
@@ -29,20 +29,20 @@ end
 TEN #=> 10
 ```
 
-# Pseudo Constants
+# 伪常量
 
-Crystal provides a few pseudo-constants which provide reflective data about the source code being executed.
+Crystal 提供了一些伪常量，以反射源代码中的信息：
 
-`__LINE__` is the current line number in the currently executing crystal file. When `__LINE__` is declared as the default value to a method parameter, it represents the line number at the location of the method call.
+`__LINE__` 是当前执行中的crystal 文件中的当前行号。当 `__LINE__` 被声明为方法的默认值时，它表示方法调用时的行号。
 
-`__END_LINE__` is the line number of the `end` of the calling block. Can only be used as a default value to a method parameter.
+`__END_LINE__` 表示当前块的 `end` 所在的行号。它只能用于方法的默认值。
 
-`__FILE__` references the full path to the currently executing crystal file.
+`__FILE__` 当前所执行文档的完整路径。
 
-`__DIR__` references the full path to the directory where the currently executing crystal file is located.
+`__DIR__` 表示当前执行中的文件所在目录的完整路径。
 
 ```crystal
-# Assuming this example code is saved at: /crystal_code/pseudo_constants.cr
+# 假设这些代码保存于: /crystal_code/pseudo_constants.cr
 #
 def pseudo_constants(caller_line = __LINE__, end_of_caller = __END_LINE__)
   puts "Called from line number: #{caller_line}"
@@ -57,7 +57,7 @@ begin
   pseudo_constants
 end
 
-# Program prints:
+# 程序输出:
 # Called from line number: 13
 # Currently at line number: 5
 # End of caller block is at: 14

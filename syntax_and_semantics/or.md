@@ -1,13 +1,13 @@
-# || - Logical OR Operator
+# || - 逻辑或运算符
 
-An `||` (or) evaluates its left hand side. If it's *falsey*, it evaluates its right hand side and has that value. Otherwise it has the value of the left hand side. Its type is the union of the types of both sides.
+`||` (或) 先求左边表达式的值，如果他是 *假的*， 它就会求值右边的表达式，并把自己的值设为它。它的类型是左右两边类型的并。
 
-You can think an `||` as syntax sugar of an `if`:
+你可以认为 `||` 是 `if`的语法糖：
 
 ```crystal
 some_exp1 || some_exp2
 
-# The above is the same as:
+# 上式等同于:
 tmp = some_exp1
 if tmp
   tmp

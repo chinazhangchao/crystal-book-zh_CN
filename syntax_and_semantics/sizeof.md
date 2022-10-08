@@ -1,23 +1,23 @@
 # sizeof
 
-The `sizeof` expression returns an `Int32` with the size in bytes of a given type. For example:
+表达式`sizeof`返回一个 `Int32`,表示该类型变量以字节计占空间的大小。例如:
 
 ```crystal
 sizeof(Int32)  #=> 4
 sizeof(Int64)  #=> 8
 ```
 
-For [Reference](http://crystal-lang.org/api/Reference.html) types, the size is the same as the size of a pointer:
+对于引用([Reference](http://crystal-lang.org/api/Reference.html) )类型，这个大小等同于指向它的指针的大小 ：
 
 ```crystal
-# On a 64 bits machine
+# 在 64 位机上
 sizeof(Pointer(Int32)) #=> 8
 sizeof(String)         #=> 8
 ```
 
-This is because a Reference's memory is allocated on the heap and a pointer to it is passed around. To get the effective size of a class, use [instance_sizeof](instance_sizeof.html).
+这是因为引用类型变量的内存是在堆上分配的，传递时只传递它的指针。为了得到一个类的真正大小，请用 [instance_sizeof](instance_sizeof.html)。
 
-The argument to sizeof is a [type](type_grammar.html) and is often combined with [typeof](typeof.html):
+sizeof 的参数是一个 [类型](type_grammar.html) ，往往与 [typeof](typeof.html)配合使用：
 
 ```crystal
 a = 1

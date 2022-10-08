@@ -1,16 +1,16 @@
-# On Debian and Ubuntu
+# 在 Debian 和 Ubuntu
 
-In Debian derived distributions, you can use the official Crystal repository.
+在 Debian 系分发版中，你可以使用官方的 Crystal 仓库。
 
-## Setup repository
+## 引入仓库
 
-First you have to add the repository to your APT configuration. For easy setup just run in your command line:
+首先你要在你的 APT 配置中加入仓库，简单起见你只要输入如下命令：
 
 ```
 curl https://dist.crystal-lang.org/apt/setup.sh | sudo bash
 ```
 
-That will add the signing key and the repository configuration. If you prefer to do it manually, execute the following commands as *root*:
+这会把仓库和秘钥一起加入配置。如果你要手动做这些，请以*root*身份输如下命令：
 
 ```
 apt-key adv --keyserver keys.gnupg.net --recv-keys 09617FD37CC06B54
@@ -18,14 +18,15 @@ echo "deb https://dist.crystal-lang.org/apt crystal main" > /etc/apt/sources.lis
 apt-get update
 ```
 
-## Install
-Once the repository is configured you're ready to install Crystal:
+## 安装
+
+一旦仓库建立完毕，你就可以安装 Crystal：
 
 ```
 sudo apt-get install crystal
 ```
 
-Sometimes [you will need](https://github.com/crystal-lang/crystal/issues/4342) to install the package `build-essential` in order to run/build Crystal programs. You can install it with the command:
+[你可能需要](https://github.com/crystal-lang/crystal/issues/4342) 安装`build-essential` 包以运行/编译 Crystal程序。你可以用这个命令安装：
 
 ```
 sudo apt-get install build-essential

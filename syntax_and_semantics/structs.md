@@ -1,6 +1,6 @@
-# Structs
+# 结构体(Structs)
 
-Instead of defining a type with `class` you can do so with `struct`:
+除了用 `class`定义类型，你还可以用 `struct`：
 
 ```crystal
 struct Point
@@ -11,23 +11,23 @@ struct Point
 end
 ```
 
-The differences between a struct and a class are:
-* Invoking `new` on a struct allocates it on the stack instead of the heap
-* A struct is [passed by value](http://crystal-lang.org/api/Value.html) while a class is passed by reference
-* A struct implicitly inherits from [Struct](http://crystal-lang.org/api/Struct.html), which inherits from [Value](http://crystal-lang.org/api/Value.html). A class implicitly inherits from [Reference](http://crystal-lang.org/api/Reference.html).
-* A struct cannot inherit a non-abstract struct.
+结构体和类的区别是：
+* 对结构体调用 `new` 会把它分配到栈上(而不是堆上)
+* 结构体 [按值传递](http://crystal-lang.org/api/Value.html),而类按引用传递
+* 结构体继承 [Struct](http://crystal-lang.org/api/Struct.html)，而`Struct`又继承 [Value](http://crystal-lang.org/api/Value.html)。类隐式地继承 [Reference](http://crystal-lang.org/api/Reference.html)。
+* 结构体不能继承一个非抽象的结构体。
 
-The last point has a reason to it: a struct has a very well defined memory layout. For example, the above `Point` struct occupies 8 bytes. If you have an array of points the points are embedded inside the array's buffer:
+最后一点原因在于：结构体有准确的内存布局。例如，上面的 `Point` 占有 8字节。如果你有一个 points 数组，那么这些点就会被直接嵌到这个数组的空间中：
 
 ```crystal
-# The array's buffer will have 8 bytes dedicated to each Point
+# 数组给每个Point分配8字节
 ary = [] of Point
 ```
 
-If `Point` is inherited, an array of such type must also account for the fact that other types can be inside it, so the size of each element must grow to accommodate that. That is certainly unexpected. So, non-abstract structs can't be inherited. Abstract structs, on the other hand, will have descendants, so it's expected that an array of them will account for the possibility of having multiple types inside it.
+如果 `Point` 被继承，那么这个类型的数组必须知道它里面可能有类型的对象，所以每个元素的大小必须增长，以容纳这些对象，而这不是我们期望的。因此，非抽象的结构体不能被继承。对应地，抽象的结构体可以有子类，一个由它们构成的数组可以考虑其中所有可能的类型。
 
-A struct can also include modules and can be generic, just like a class.
+像类一样，结构体也可以包含模块，也可以是泛型。
 
-A struct is mostly used for performance reasons to avoid lots of small memory allocations when passing small copies might be more efficient.
+结构体常用于优化性能：如果对象按值传递的代价也不大，那么直接在栈上分配它们可以减少频繁分配内存的损耗。
 
-So how do you choose between a struct and a class? The rule of thumb is that if no instance variable is ever reassigned, i.e. your type is immutable, you could use a struct, otherwise use a class.
+所以你要如何选择定义结构体还是类？凭经验来说，如果没有成员变量被重新赋值，即，你的类型是不可变的，那就定义成结构体；反之则定义成类。
